@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LUMIÈRE CAFÉ & BAR | 五反田</title>
+  <meta name="description" content="昼はゆっくりコーヒーとスイーツを、夜は洗練されたカクテルと会話を。個室完備・合コン・出会いイベント多数開催。">
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Noto+Sans+JP:wght@300;400;500&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- ========== HEADER / NAV ========== -->
+  <header class="header" id="header">
+    <div class="header__inner">
+      <a href="#hero" class="header__logo">
+        <span class="logo-main">LUMIÈRE</span>
+        <span class="logo-sub">CAFÉ &amp; BAR</span>
+      </a>
+      <nav class="header__nav">
+        <ul>
+          <li><a href="#cafe">CAFÉ</a></li>
+          <li><a href="#bar">BAR</a></li>
+          <li><a href="#private">個室</a></li>
+          <li><a href="#events">イベント</a></li>
+          <li><a href="#access">アクセス</a></li>
+          <li><a href="#reserve" class="nav-cta">予約する</a></li>
+        </ul>
+      </nav>
+      <button class="hamburger" id="hamburger" aria-label="メニュー">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+    <nav class="mobile-nav" id="mobileNav">
+      <ul>
+        <li><a href="#cafe" onclick="closeMobileNav()">CAFÉ</a></li>
+        <li><a href="#bar" onclick="closeMobileNav()">BAR</a></li>
+        <li><a href="#private" onclick="closeMobileNav()">個室</a></li>
+        <li><a href="#events" onclick="closeMobileNav()">イベント</a></li>
+        <li><a href="#access" onclick="closeMobileNav()">アクセス</a></li>
+        <li><a href="#reserve" onclick="closeMobileNav()" class="nav-cta">予約する</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- ========== HERO ========== -->
+  <section class="hero" id="hero">
+    <div class="hero__bg">
+      <div class="hero__overlay"></div>
+    </div>
+    <div class="hero__content">
+      <p class="hero__eyebrow">五反田 / GOTANDA</p>
+      <h1 class="hero__title">
+        <span class="hero__title-main">LUMIÈRE</span>
+        <span class="hero__title-sub">CAFÉ &amp; BAR</span>
+      </h1>
+      <p class="hero__catch">光あふれる空間で、出会いと会話をもっと豊かに。</p>
+      <div class="hero__hours">
+        <span>CAFÉ 11:00 – 17:00</span>
+        <span class="separator">|</span>
+        <span>BAR 18:00 – 27:00</span>
+      </div>
+      <div class="hero__cta">
+        <a href="#reserve" class="btn btn--primary">席を予約する</a>
+        <a href="#events" class="btn btn--outline">イベントを見る</a>
+      </div>
+    </div>
+    <a href="#cafe" class="hero__scroll">
+      <span>SCROLL</span>
+      <span class="scroll-line"></span>
+    </a>
+  </section>
+
+  <!-- ========== CONCEPT ========== -->
+  <section class="concept" id="concept">
+    <div class="container">
+      <div class="concept__inner">
+        <div class="concept__text">
+          <p class="section-label">CONCEPT</p>
+          <h2 class="section-title">光と出会いが<br>交わる場所</h2>
+          <p class="concept__body">
+            LUMIÈREは「光」を意味するフランス語。<br>
+            開放的で明るいインテリアが自慢の空間で、<br>
+            昼はこだわりのコーヒーとスイーツを、<br>
+            夜は上質なカクテルと会話を楽しんでいただけます。
+          </p>
+          <p class="concept__body">
+            個室完備で合コンやパーティにも最適。<br>
+            毎月開催する出会いイベントも好評です。
+          </p>
+        </div>
+        <div class="concept__image">
+          <div class="image-placeholder concept-img">
+            <span>店内イメージ写真</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== CAFÉ ========== -->
+  <section class="cafe-section" id="cafe">
+    <div class="container">
+      <p class="section-label">CAFÉ TIME 11:00–17:00</p>
+      <h2 class="section-title">昼のカフェタイム</h2>
+      <p class="section-desc">こだわりの豆から丁寧に淹れるコーヒーと、<br>シェフ手作りのスイーツでゆっくりとしたひとときを。</p>
+
+      <div class="menu-grid">
+        <div class="menu-card">
+          <div class="image-placeholder menu-img">
+            <span>コーヒー写真</span>
+          </div>
+          <h3>シグネチャーブレンド</h3>
+          <p>深みのある香りとやわらかな苦み。自家焙煎のオリジナルブレンド。</p>
+          <span class="price">¥650~</span>
+        </div>
+        <div class="menu-card">
+          <div class="image-placeholder menu-img">
+            <span>スイーツ写真</span>
+          </div>
+          <h3>季節のパフェ</h3>
+          <p>旬のフルーツをふんだんに使った、目でも楽しめる一品。</p>
+          <span class="price">¥1,200~</span>
+        </div>
+        <div class="menu-card">
+          <div class="image-placeholder menu-img">
+            <span>ランチ写真</span>
+          </div>
+          <h3>ランチプレート</h3>
+          <p>日替わりの軽食プレート。ドリンクセットでお得に。</p>
+          <span class="price">¥1,500~</span>
+        </div>
+      </div>
+
+      <div class="section-cta">
+        <a href="#" class="btn btn--secondary">カフェメニューを見る</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== BAR ========== -->
+  <section class="bar-section" id="bar">
+    <div class="bar-section__bg">
+      <div class="bar-section__overlay"></div>
+    </div>
+    <div class="container">
+      <p class="section-label light">BAR TIME 18:00–27:00</p>
+      <h2 class="section-title light">夜のバータイム</h2>
+      <p class="section-desc light">バーテンダーが一杯ずつ丁寧に仕上げるカクテルで、<br>特別な夜を演出します。</p>
+
+      <div class="menu-grid">
+        <div class="menu-card dark">
+          <div class="image-placeholder menu-img dark-img">
+            <span>カクテル写真</span>
+          </div>
+          <h3>シグネチャーカクテル</h3>
+          <p>LUMIÈREオリジナルのスペシャルカクテル。季節ごとに変わる限定フレーバー。</p>
+          <span class="price gold">¥1,200~</span>
+        </div>
+        <div class="menu-card dark">
+          <div class="image-placeholder menu-img dark-img">
+            <span>ワイン写真</span>
+          </div>
+          <h3>厳選ワイン</h3>
+          <p>ソムリエ監修のワインリスト。グラスでも気軽に楽しめます。</p>
+          <span class="price gold">¥800~</span>
+        </div>
+        <div class="menu-card dark">
+          <div class="image-placeholder menu-img dark-img">
+            <span>フードペアリング写真</span>
+          </div>
+          <h3>おつまみプレート</h3>
+          <p>お酒に合う厳選フード。チーズ・生ハム・旬の一品料理。</p>
+          <span class="price gold">¥900~</span>
+        </div>
+      </div>
+
+      <div class="section-cta">
+        <a href="#" class="btn btn--gold">バーメニューを見る</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== PRIVATE ROOMS ========== -->
+  <section class="private-section" id="private">
+    <div class="container">
+      <p class="section-label">PRIVATE ROOM</p>
+      <h2 class="section-title">完全個室で<br>プライベートな時間を</h2>
+      <p class="section-desc">
+        合コン・女子会・誕生日会・ビジネス接待まで、<br>
+        さまざまなシーンに対応する個室をご用意しています。
+      </p>
+
+      <div class="private-grid">
+        <div class="private-card">
+          <div class="image-placeholder private-img">
+            <span>個室A 写真</span>
+          </div>
+          <div class="private-card__body">
+            <span class="room-tag">2〜4名</span>
+            <h3>コンパクトルーム</h3>
+            <p>デートや少人数での会食に。落ち着いた雰囲気のプライベート空間。</p>
+            <ul class="room-features">
+              <li>✓ 完全個室・防音仕様</li>
+              <li>✓ 専用モニター完備</li>
+              <li>✓ 2時間から予約可能</li>
+            </ul>
+            <a href="#reserve" class="btn btn--outline-dark">この部屋を予約</a>
+          </div>
+        </div>
+        <div class="private-card featured">
+          <div class="featured-badge">人気 No.1</div>
+          <div class="image-placeholder private-img">
+            <span>個室B 写真</span>
+          </div>
+          <div class="private-card__body">
+            <span class="room-tag">4〜8名</span>
+            <h3>合コンルーム</h3>
+            <p>合コン・パーティに最適な広さ。入れ替え制で安心してご利用いただけます。</p>
+            <ul class="room-features">
+              <li>✓ 完全個室・入替制</li>
+              <li>✓ ウェルカムドリンク付き</li>
+              <li>✓ 幹事サポートあり</li>
+            </ul>
+            <a href="#reserve" class="btn btn--primary">この部屋を予約</a>
+          </div>
+        </div>
+        <div class="private-card">
+          <div class="image-placeholder private-img">
+            <span>個室C 写真</span>
+          </div>
+          <div class="private-card__body">
+            <span class="room-tag">8〜20名</span>
+            <h3>パーティルーム</h3>
+            <p>貸切パーティや大人数のイベントにも対応。プロジェクター常設。</p>
+            <ul class="room-features">
+              <li>✓ 貸切対応</li>
+              <li>✓ プロジェクター・音響完備</li>
+              <li>✓ ケータリング手配可能</li>
+            </ul>
+            <a href="#reserve" class="btn btn--outline-dark">この部屋を予約</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== EVENTS ========== -->
+  <section class="events-section" id="events">
+    <div class="events-section__bg"></div>
+    <div class="container">
+      <p class="section-label">EVENTS</p>
+      <h2 class="section-title">出会いと楽しさを<br>生み出すイベント</h2>
+      <p class="section-desc">
+        毎月開催する出会いイベントは男女ともに大好評。<br>
+        気軽に参加できる企画から本格的な婚活まで幅広くご用意。
+      </p>
+
+      <div class="events-grid">
+        <div class="event-card">
+          <div class="event-card__header pink">
+            <span class="event-icon">♡</span>
+            <span class="event-freq">毎週土曜開催</span>
+          </div>
+          <div class="event-card__body">
+            <h3>恋活ナイト</h3>
+            <p>20〜35歳限定の出会いパーティ。明るい雰囲気でゆっくり話せるのが人気の秘密。</p>
+            <div class="event-meta">
+              <span>参加費 ¥3,500~</span>
+              <span>男女各15名</span>
+            </div>
+            <a href="#reserve" class="btn btn--pink">参加を申し込む</a>
+          </div>
+        </div>
+        <div class="event-card">
+          <div class="event-card__header amber">
+            <span class="event-icon">🥂</span>
+            <span class="event-freq">毎月第2金曜</span>
+          </div>
+          <div class="event-card__body">
+            <h3>大人の合コン会</h3>
+            <p>30代中心のオトナ合コン。少人数・入れ替え制でじっくりとお話できます。</p>
+            <div class="event-meta">
+              <span>参加費 ¥4,500~</span>
+              <span>男女各8名</span>
+            </div>
+            <a href="#reserve" class="btn btn--amber">参加を申し込む</a>
+          </div>
+        </div>
+        <div class="event-card">
+          <div class="event-card__header teal">
+            <span class="event-icon">🍸</span>
+            <span class="event-freq">不定期開催</span>
+          </div>
+          <div class="event-card__body">
+            <h3>趣味コン・テーマパーティ</h3>
+            <p>映画・旅行・音楽など共通の趣味を持つ人同士が自然と仲良くなれる企画。</p>
+            <div class="event-meta">
+              <span>参加費 ¥2,500~</span>
+              <span>テーマ別開催</span>
+            </div>
+            <a href="#reserve" class="btn btn--teal">参加を申し込む</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="events-note">
+        <p>イベントの最新情報はSNSでもお知らせしています。フォローして最新情報をチェック！</p>
+        <div class="sns-links">
+          <a href="#" class="sns-btn instagram">Instagram</a>
+          <a href="#" class="sns-btn twitter">X (Twitter)</a>
+          <a href="#" class="sns-btn line">LINE公式</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== GALLERY ========== -->
+  <section class="gallery-section" id="gallery">
+    <div class="container">
+      <p class="section-label">GALLERY</p>
+      <h2 class="section-title">店内ギャラリー</h2>
+    </div>
+    <div class="gallery-grid">
+      <div class="gallery-item g-tall"><div class="image-placeholder gallery-img"><span>店内全景</span></div></div>
+      <div class="gallery-item"><div class="image-placeholder gallery-img"><span>カウンター</span></div></div>
+      <div class="gallery-item"><div class="image-placeholder gallery-img"><span>個室内装</span></div></div>
+      <div class="gallery-item g-wide"><div class="image-placeholder gallery-img"><span>カクテル</span></div></div>
+      <div class="gallery-item"><div class="image-placeholder gallery-img"><span>スイーツ</span></div></div>
+      <div class="gallery-item"><div class="image-placeholder gallery-img"><span>イベント風景</span></div></div>
+    </div>
+  </section>
+
+  <!-- ========== RESERVE ========== -->
+  <section class="reserve-section" id="reserve">
+    <div class="reserve-section__bg"></div>
+    <div class="container">
+      <p class="section-label light">RESERVATION</p>
+      <h2 class="section-title light">ご予約・お問い合わせ</h2>
+      <p class="section-desc light">お席のご予約、個室のお問い合わせ、イベント参加申込みはこちらから。</p>
+
+      <div class="reserve-inner">
+        <div class="reserve-form-wrap">
+          <form class="reserve-form" id="reserveForm">
+            <div class="form-row two-col">
+              <div class="form-group">
+                <label>お名前 <span class="required">*</span></label>
+                <input type="text" name="name" placeholder="山田 太郎" required>
+              </div>
+              <div class="form-group">
+                <label>電話番号 <span class="required">*</span></label>
+                <input type="tel" name="phone" placeholder="090-0000-0000" required>
+              </div>
+            </div>
+            <div class="form-group">
+              <label>メールアドレス <span class="required">*</span></label>
+              <input type="email" name="email" placeholder="example@email.com" required>
+            </div>
+            <div class="form-row two-col">
+              <div class="form-group">
+                <label>ご利用目的 <span class="required">*</span></label>
+                <select name="purpose" required>
+                  <option value="">選択してください</option>
+                  <option>通常のお食事・カフェ</option>
+                  <option>バータイム利用</option>
+                  <option>個室予約（合コン・パーティ）</option>
+                  <option>イベント参加申込み</option>
+                  <option>貸切・団体予約</option>
+                  <option>その他</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>ご利用人数</label>
+                <select name="guests">
+                  <option>1〜2名</option>
+                  <option>3〜4名</option>
+                  <option>5〜8名</option>
+                  <option>9〜20名</option>
+                  <option>21名以上</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-row two-col">
+              <div class="form-group">
+                <label>ご希望日</label>
+                <input type="date" name="date">
+              </div>
+              <div class="form-group">
+                <label>ご希望時間帯</label>
+                <select name="time">
+                  <option>カフェタイム（11:00〜17:00）</option>
+                  <option>バータイム（18:00〜27:00）</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label>ご要望・ご質問</label>
+              <textarea name="message" rows="4" placeholder="ご要望、アレルギー情報、その他ご質問などをご記入ください。"></textarea>
+            </div>
+            <button type="submit" class="btn btn--primary btn--full">送信する</button>
+          </form>
+        </div>
+
+        <div class="reserve-info">
+          <div class="info-card">
+            <h3>営業時間</h3>
+            <dl>
+              <dt>CAFÉ</dt>
+              <dd>11:00 〜 17:00</dd>
+              <dt>BAR</dt>
+              <dd>18:00 〜 27:00（翌3:00）</dd>
+              <dt>定休日</dt>
+              <dd>月曜日</dd>
+            </dl>
+          </div>
+          <div class="info-card">
+            <h3>お電話でのご予約</h3>
+            <a href="tel:03-0000-0000" class="phone-link">03-0000-0000</a>
+            <p class="phone-hours">受付時間：10:00〜22:00</p>
+          </div>
+          <div class="info-card">
+            <h3>LINE予約</h3>
+            <a href="#" class="btn btn--line btn--full">LINEで予約する</a>
+            <p class="line-note">LINEからお気軽にお問い合わせください。</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== ACCESS ========== -->
+  <section class="access-section" id="access">
+    <div class="container">
+      <p class="section-label">ACCESS</p>
+      <h2 class="section-title">アクセス</h2>
+
+      <div class="access-inner">
+        <div class="access-map">
+          <div class="image-placeholder map-img">
+            <span>地図 / Google Map</span>
+          </div>
+        </div>
+        <div class="access-info">
+          <dl class="access-dl">
+            <dt>店名</dt>
+            <dd>LUMIÈRE CAFÉ &amp; BAR</dd>
+            <dt>住所</dt>
+            <dd>〒141-0022<br>東京都品川区東五反田X-XX-XX<br>○○ビル X階</dd>
+            <dt>最寄り駅</dt>
+            <dd>
+              JR山手線・東急池上線・都営浅草線<br>
+              「五反田駅」東口より徒歩3分
+            </dd>
+            <dt>電話</dt>
+            <dd><a href="tel:03-0000-0000">03-0000-0000</a></dd>
+            <dt>営業時間</dt>
+            <dd>
+              CAFÉ 11:00〜17:00<br>
+              BAR 18:00〜27:00（翌3:00）
+            </dd>
+            <dt>定休日</dt>
+            <dd>月曜日</dd>
+          </dl>
+          <a href="https://maps.google.com" target="_blank" rel="noopener" class="btn btn--outline-dark">Google Mapで見る</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== FOOTER ========== -->
+  <footer class="footer">
+    <div class="footer__inner">
+      <div class="footer__logo">
+        <span class="logo-main">LUMIÈRE</span>
+        <span class="logo-sub">CAFÉ &amp; BAR</span>
+      </div>
+      <nav class="footer__nav">
+        <a href="#cafe">CAFÉ</a>
+        <a href="#bar">BAR</a>
+        <a href="#private">個室</a>
+        <a href="#events">イベント</a>
+        <a href="#access">アクセス</a>
+        <a href="#reserve">予約</a>
+      </nav>
+      <div class="footer__sns">
+        <a href="#" aria-label="Instagram" class="sns-icon">IG</a>
+        <a href="#" aria-label="Twitter/X" class="sns-icon">X</a>
+        <a href="#" aria-label="LINE" class="sns-icon">LINE</a>
+      </div>
+      <p class="footer__copy">&copy; 2024 LUMIÈRE CAFÉ &amp; BAR. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
