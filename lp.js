@@ -1,5 +1,5 @@
 // ===== GAS Web App URL（デプロイ後にここを書き換えてください）=====
-const GAS_URL = 'YOUR_GAS_WEB_APP_URL';
+const GAS_URL = 'https://script.google.com/macros/s/AKfycbwabqeV2enmmmriEdwml3i1rZQq3tJIs1PRkwwpArYKLdRgMHpPKG6FqFVCUPMGEGKv/exec';
 
 // ===== スムーズスクロール =====
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
