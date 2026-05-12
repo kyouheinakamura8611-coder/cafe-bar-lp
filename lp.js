@@ -50,11 +50,11 @@ document.getElementById('lpForm').addEventListener('submit', async function(e) {
   };
 
   try {
-    // GASにPOST送信（no-corsモードで送信）
+    // GASにPOST送信（text/plainでno-cors回避）
     await fetch(GAS_URL, {
       method: 'POST',
       mode:   'no-cors',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'text/plain' },
       body: JSON.stringify(data),
     });
 
