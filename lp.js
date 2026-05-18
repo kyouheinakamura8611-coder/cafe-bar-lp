@@ -50,10 +50,8 @@ document.getElementById('lpForm').addEventListener('submit', async function(e) {
   };
 
   try {
-    // GASにGET送信（URLパラメータ方式・最も確実）
-    const url = new URL(GAS_URL);
-    Object.entries(data).forEach(([k, v]) => url.searchParams.append(k, v));
-    await fetch(url.toString(), { method: 'GET', mode: 'no-cors' });
+    // 隠しiframe経由でGASにフォーム送信（リダイレクト対応・最も確実）
+    await submitToGAS(data);
 
     // 成功表示
     form.reset();
@@ -66,6 +64,44 @@ document.getElementById('lpForm').addEventListener('submit', async function(e) {
     submitBtn.disabled = false;
   }
 });
+
+// ===== 隠しiframeでGASに送信 =====
+function submitToGAS(data) {
+  return new Promise((resolve) => {
+    const iframeName = 'gas_frame_' + Date.now();
+
+    // 隠しiframe作成
+    const iframe = document.createElement('iframe');
+    iframe.name = iframeName;
+    iframe.style.display = 'none';
+    document.body.appendChild(iframe);
+
+    // フォーム作成
+    const form = document.createElement('form');
+    form.method = 'GET';
+    form.action = GAS_URL;
+    form.target = iframeName;
+
+    // フィールド追加
+    Object.entries(data).forEach(([k, v]) => {
+      const input = document.createElement('input');
+      input.type = 'hidden';
+      input.name = k;
+      input.value = v;
+      form.appendChild(input);
+    });
+
+    document.body.appendChild(form);
+    form.submit();
+
+    // 送信後クリーンアップ
+    setTimeout(() => {
+      document.body.removeChild(form);
+      document.body.removeChild(iframe);
+      resolve();
+    }, 2000);
+  });
+}
 
 // ===== メッセージ表示 =====
 function showMessage(text, type) {
