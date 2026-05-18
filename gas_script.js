@@ -4,15 +4,22 @@
 // ================================================================
 
 // ▼ 設定：店舗への通知メールアドレスを入力してください
-const STORE_EMAIL = 'YOUR_STORE_EMAIL@gmail.com';
+const STORE_EMAIL = 'moruno1027@gmail.com';
 const STORE_NAME  = 'Haze Coffee&Bar';
 
 // ================================================================
-// POST受信（フォーム送信時に呼ばれる）
+// GET受信（フォーム送信時に呼ばれる）
 // ================================================================
-function doPost(e) {
+function doGet(e) {
   try {
-    const data = JSON.parse(e.postData.contents);
+    const data = e.parameter;
+
+    // データが空の場合はテストアクセスとみなす
+    if (!data.name) {
+      return ContentService
+        .createTextOutput(JSON.stringify({ status: 'ok', message: 'GAS is running.' }))
+        .setMimeType(ContentService.MimeType.JSON);
+    }
 
     // 1. スプレッドシートに記録
     saveToSheet(data);
@@ -28,17 +35,16 @@ function doPost(e) {
       .setMimeType(ContentService.MimeType.JSON);
 
   } catch (err) {
+    Logger.log('エラー: ' + err.message);
     return ContentService
       .createTextOutput(JSON.stringify({ status: 'error', message: err.message }))
       .setMimeType(ContentService.MimeType.JSON);
   }
 }
 
-// GASのURLテスト用
-function doGet(e) {
-  return ContentService
-    .createTextOutput(JSON.stringify({ status: 'ok', message: 'GAS is running.' }))
-    .setMimeType(ContentService.MimeType.JSON);
+// POST も念のため対応
+function doPost(e) {
+  return doGet(e);
 }
 
 // ================================================================
@@ -67,11 +73,11 @@ function saveToSheet(data) {
 
   sheet.appendRow([
     new Date(),
-    purposeMap[data.purpose] || data.purpose,
-    data.name,
-    data.phone,
-    data.email,
-    data.date,
+    purposeMap[data.purpose] || data.purpose || '未選択',
+    data.name    || '',
+    data.phone   || '',
+    data.email   || '',
+    data.date    || '',
     data.guests  || '未記入',
     data.message || '特になし',
   ]);
@@ -81,6 +87,8 @@ function saveToSheet(data) {
 // お客様への確認メール
 // ================================================================
 function sendConfirmationToCustomer(data) {
+  if (!data.email) return;
+
   const purposeMap = {
     cafe:   'カフェ利用',
     bar:    'バー利用',

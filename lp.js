@@ -50,13 +50,10 @@ document.getElementById('lpForm').addEventListener('submit', async function(e) {
   };
 
   try {
-    // GASにPOST送信（text/plainでno-cors回避）
-    await fetch(GAS_URL, {
-      method: 'POST',
-      mode:   'no-cors',
-      headers: { 'Content-Type': 'text/plain' },
-      body: JSON.stringify(data),
-    });
+    // GASにGET送信（URLパラメータ方式・最も確実）
+    const url = new URL(GAS_URL);
+    Object.entries(data).forEach(([k, v]) => url.searchParams.append(k, v));
+    await fetch(url.toString(), { method: 'GET', mode: 'no-cors' });
 
     // 成功表示
     form.reset();
