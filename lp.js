@@ -139,6 +139,12 @@ function renderTimeSlots(slots) {
   }
 }
 
+// ===== バー時間帯判定 =====
+function isBarTime(time) {
+  const [h, m] = time.split(':').map(Number);
+  return (h * 60 + m) >= 1260; // 21:00以降
+}
+
 // ===== STEP 4：サマリー更新 =====
 function updateSummary() {
   document.getElementById('summaryGuests').textContent = selectedGuests + '名';
@@ -147,6 +153,18 @@ function updateSummary() {
   document.getElementById('hiddenGuests').value = selectedGuests;
   document.getElementById('hiddenDate').value   = selectedDate;
   document.getElementById('hiddenTime').value   = selectedTime;
+
+  // バー時間帯なら目的選択を表示、カフェなら非表示
+  const barGroup = document.getElementById('barPurposeGroup');
+  if (isBarTime(selectedTime)) {
+    barGroup.style.display = 'block';
+    document.getElementById('hiddenPurpose').value = 'bar';
+    // バー目的の選択をリセット
+    document.querySelectorAll('input[name="barPurpose"]').forEach(r => r.checked = false);
+  } else {
+    barGroup.style.display = 'none';
+    document.getElementById('hiddenPurpose').value = 'cafe';
+  }
 }
 
 // ===== フォーム送信 =====
@@ -156,12 +174,17 @@ document.getElementById('lpForm').addEventListener('submit', async function(e) {
   const submitBtn = form.querySelector('.lp-submit-btn');
 
   // バリデーション
-  const purpose = form.querySelector('input[name="purpose"]:checked');
-  const name    = form.querySelector('input[name="name"]').value.trim();
-  const phone   = form.querySelector('input[name="phone"]').value.trim();
-  const email   = form.querySelector('input[name="email"]').value.trim();
+  const name  = form.querySelector('input[name="name"]').value.trim();
+  const phone = form.querySelector('input[name="phone"]').value.trim();
+  const email = form.querySelector('input[name="email"]').value.trim();
 
-  if (!purpose) { showMessage('ご利用目的を選択してください。', 'error'); return; }
+  // バー時間帯は目的選択が必須
+  if (isBarTime(selectedTime)) {
+    const barPurpose = form.querySelector('input[name="barPurpose"]:checked');
+    if (!barPurpose) { showMessage('ご利用目的を選択してください。', 'error'); return; }
+    document.getElementById('hiddenPurpose').value = barPurpose.value;
+  }
+
   if (!name || !phone || !email) { showMessage('必須項目をすべて入力してください。', 'error'); return; }
   if (!selectedGuests || !selectedDate || !selectedTime) {
     showMessage('人数・日付・時間を最初から選び直してください。', 'error'); return;
@@ -174,7 +197,7 @@ document.getElementById('lpForm').addEventListener('submit', async function(e) {
     guests_num: selectedGuests,
     date:       selectedDate,
     time:       selectedTime,
-    purpose:    purpose.value,
+    purpose:    document.getElementById('hiddenPurpose').value,
     name,
     phone,
     email,

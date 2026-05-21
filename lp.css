@@ -747,6 +747,11 @@ img { max-width: 100%; display: block; }
   color: #fff;
 }
 
+/* バー目的選択（3択） */
+.bar-purpose-grid {
+  grid-template-columns: repeat(3, 1fr) !important;
+}
+
 /* ===== DATE INPUT ===== */
 .date-input {
   width: 100%;

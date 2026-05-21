@@ -257,16 +257,15 @@
           <input type="hidden" name="guests_num" id="hiddenGuests">
           <input type="hidden" name="date"        id="hiddenDate">
           <input type="hidden" name="time"        id="hiddenTime">
+          <input type="hidden" name="purpose"     id="hiddenPurpose" value="cafe">
 
-          <div class="lp-form-group">
+          <!-- バー時間帯のみ表示：利用目的 -->
+          <div class="lp-form-group" id="barPurposeGroup" style="display:none">
             <label>ご利用目的 <span class="req">*</span></label>
-            <div class="purpose-grid">
-              <label class="purpose-btn"><input type="radio" name="purpose" value="cafe" required><span>カフェ利用</span></label>
-              <label class="purpose-btn"><input type="radio" name="purpose" value="bar"><span>バー利用</span></label>
-              <label class="purpose-btn"><input type="radio" name="purpose" value="goukon"><span>合コン・個室</span></label>
-              <label class="purpose-btn"><input type="radio" name="purpose" value="event"><span>イベント参加</span></label>
-              <label class="purpose-btn"><input type="radio" name="purpose" value="party"><span>貸切パーティ</span></label>
-              <label class="purpose-btn"><input type="radio" name="purpose" value="other"><span>その他</span></label>
+            <div class="purpose-grid bar-purpose-grid">
+              <label class="purpose-btn"><input type="radio" name="barPurpose" value="goukon"><span>合コン・個室</span></label>
+              <label class="purpose-btn"><input type="radio" name="barPurpose" value="event"><span>イベント参加</span></label>
+              <label class="purpose-btn"><input type="radio" name="barPurpose" value="party"><span>貸切パーティ</span></label>
             </div>
           </div>
 
