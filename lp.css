@@ -828,6 +828,19 @@ img { max-width: 100%; display: block; }
 }
 .reserve-summary .sep { margin: 0 8px; opacity: 0.5; }
 
+/* ===== 準備中ボタン ===== */
+/* 有効化するときは lp.html の「btn--coming-soon」を削除し
+   「href="javascript:void(0)"」を「href="#form"」に戻してください */
+.btn--coming-soon {
+  opacity: 0.45 !important;
+  cursor: not-allowed !important;
+  pointer-events: none !important;
+  background: #aaa !important;
+  border-color: #aaa !important;
+  color: #fff !important;
+  position: relative;
+}
+
 /* ===== FORM MESSAGE ===== */
 .form-message {
   padding: 16px 20px;
