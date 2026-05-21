@@ -66,7 +66,7 @@ function getAvailability(date, guests) {
   for (let i = 1; i < data.length; i++) {
     if (formatDate(data[i][0]) !== date) continue;
 
-    const time  = String(data[i][1]);
+    const time  = formatTime(data[i][1]);
     const cnt2  = parseInt(data[i][2]) || 0; // 2名テーブル残数
     const cnt4  = parseInt(data[i][3]) || 0; // 4名テーブル残数
     const cntC  = parseInt(data[i][4]) || 0; // カウンター残席
@@ -101,7 +101,7 @@ function processReservation(params) {
     if (sheet) {
       const data = sheet.getDataRange().getValues();
       for (let i = 1; i < data.length; i++) {
-        if (formatDate(data[i][0]) !== date || String(data[i][1]) !== time) continue;
+        if (formatDate(data[i][0]) !== date || formatTime(data[i][1]) !== time) continue;
 
         const cnt2 = parseInt(data[i][2]) || 0;
         const cnt4 = parseInt(data[i][3]) || 0;
@@ -226,6 +226,17 @@ function formatDate(d) {
   return dt.getFullYear() + '-' +
     String(dt.getMonth()+1).padStart(2,'0') + '-' +
     String(dt.getDate()).padStart(2,'0');
+}
+
+// ================================================================
+// 時刻フォーマット（Sheetsが日付オブジェクトで返す場合に対応）
+// ================================================================
+function formatTime(t) {
+  if (!t) return '';
+  if (typeof t === 'string') return t;
+  const dt = new Date(t);
+  return String(dt.getHours()).padStart(2,'0') + ':' +
+         String(dt.getMinutes()).padStart(2,'0');
 }
 
 // ================================================================
