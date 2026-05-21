@@ -242,62 +242,64 @@ function setupSeatManagement() {
     sheet = ss.insertSheet('席管理');
   }
 
-  // ヘッダー
-  sheet.appendRow([
-    '日付', '時間',
-    '2名テーブル残数\n(最大2)',
-    '4名テーブル残数\n(最大3)',
-    'カウンター残席\n(最大4)',
-    '備考'
-  ]);
-  sheet.getRange(1,1,1,6).setFontWeight('bold').setBackground('#c6efce');
-  sheet.setFrozenRows(1);
+  // ヘッダー（1行で書き込み）
+  sheet.getRange(1,1,1,6).setValues([[
+    '日付', '時間', '2名テーブル残数(最大2)', '4名テーブル残数(最大3)', 'カウンター残席(最大4)', '備考'
+  ]]);
 
-  // 時間枠生成
-  const cafeSlots = [];
+  // 時間枠生成（カフェ・バー）
+  const slots = [];
   for (let h = 11; h <= 16; h++) {
-    cafeSlots.push(String(h).padStart(2,'0') + ':00');
-    cafeSlots.push(String(h).padStart(2,'0') + ':30');
+    slots.push(String(h).padStart(2,'0') + ':00');
+    slots.push(String(h).padStart(2,'0') + ':30');
   }
-  // 16:30まで（17:00閉店の30分前）
-  const barSlots = [];
   for (let h = 18; h <= 26; h++) {
-    barSlots.push(String(h).padStart(2,'0') + ':00');
-    barSlots.push(String(h).padStart(2,'0') + ':30');
+    slots.push(String(h).padStart(2,'0') + ':00');
+    slots.push(String(h).padStart(2,'0') + ':30');
   }
 
+  // 30日分のデータを一括生成
   const today = new Date();
   const rows  = [];
-
-  for (let d = 0; d < 60; d++) {
+  for (let d = 0; d < 30; d++) {
     const date = new Date(today);
     date.setDate(today.getDate() + d);
     if (date.getDay() === 1) continue; // 月曜定休
-
     const dateStr = formatDate(date);
-    [...cafeSlots, ...barSlots].forEach(t => {
-      rows.push([dateStr, t, 2, 3, 4, '']);
-    });
+    slots.forEach(t => rows.push([dateStr, t, 2, 3, 4, '']));
   }
 
-  sheet.getRange(2, 1, rows.length, 6).setValues(rows);
+  // 一括書き込み（高速）
+  if (rows.length > 0) {
+    sheet.getRange(2, 1, rows.length, 6).setValues(rows);
+  }
 
-  // 残数0のセルを赤くする条件付き書式
-  const numRange = sheet.getRange(2, 3, rows.length, 3);
-  const rule = SpreadsheetApp.newConditionalFormatRule()
-    .whenNumberEqualTo(0)
-    .setBackground('#ffcccc')
-    .setFontColor('#cc0000')
-    .setRanges([numRange])
-    .build();
-  sheet.setConditionalFormatRules([rule]);
+  SpreadsheetApp.getUi().alert('✅ セットアップ完了！\n30日分の予約枠を生成しました。\n数字を直接編集して席数を管理できます。\n\n※ 追加で次の30日分が必要な場合は\n「addNextMonth」関数を実行してください。');
+}
 
-  // 列幅調整
-  sheet.setColumnWidth(1, 110);
-  sheet.setColumnWidth(2, 70);
-  sheet.setColumnWidth(3, 120);
-  sheet.setColumnWidth(4, 120);
-  sheet.setColumnWidth(5, 120);
+// 追加で次の30日分を生成する関数
+function addNextMonth() {
+  const ss    = SpreadsheetApp.getActiveSpreadsheet();
+  const sheet = ss.getSheetByName('席管理');
+  if (!sheet) { SpreadsheetApp.getUi().alert('先にsetupSeatManagementを実行してください。'); return; }
 
-  SpreadsheetApp.getUi().alert('✅ セットアップ完了！\n60日分の予約枠を生成しました。\n数字を直接編集して席数を管理できます。');
+  const lastRow  = sheet.getLastRow();
+  const lastDate = lastRow > 1 ? new Date(sheet.getRange(lastRow, 1).getValue()) : new Date();
+  lastDate.setDate(lastDate.getDate() + 1);
+
+  const slots = [];
+  for (let h = 11; h <= 16; h++) { slots.push(String(h).padStart(2,'0')+':00'); slots.push(String(h).padStart(2,'0')+':30'); }
+  for (let h = 18; h <= 26; h++) { slots.push(String(h).padStart(2,'0')+':00'); slots.push(String(h).padStart(2,'0')+':30'); }
+
+  const rows = [];
+  for (let d = 0; d < 30; d++) {
+    const date = new Date(lastDate);
+    date.setDate(lastDate.getDate() + d);
+    if (date.getDay() === 1) continue;
+    const dateStr = formatDate(date);
+    slots.forEach(t => rows.push([dateStr, t, 2, 3, 4, '']));
+  }
+
+  if (rows.length > 0) sheet.getRange(lastRow + 1, 1, rows.length, 6).setValues(rows);
+  SpreadsheetApp.getUi().alert('✅ 次の30日分を追加しました！');
 }
