@@ -105,10 +105,10 @@ function renderTimeSlots(slots) {
 
   slots.forEach(slot => {
     const btn = document.createElement('button');
-    btn.type      = 'button';
-    btn.className = 'time-btn' + (slot.available ? '' : ' time-btn--full');
-    btn.textContent = slot.time + (slot.available ? '' : '\n満席');
-    btn.disabled  = !slot.available;
+    btn.type        = 'button';
+    btn.className   = 'time-btn' + (slot.available ? '' : ' time-btn--full');
+    btn.textContent = slot.time;
+    btn.disabled    = !slot.available;
 
     if (slot.available) {
       btn.addEventListener('click', () => {
@@ -120,13 +120,15 @@ function renderTimeSlots(slots) {
       });
     }
 
-    const h = parseInt(slot.time.split(':')[0]);
-    if (h >= 18) {
-      barGrid.appendChild(btn);
-      hasBar = true;
-    } else {
+    // カフェ：07:00〜15:30 ／ バー：21:00〜23:00
+    const [hh, mm] = slot.time.split(':').map(Number);
+    const totalMins = hh * 60 + mm;
+    if (totalMins >= 420 && totalMins <= 930) {   // 7:00〜15:30
       cafeGrid.appendChild(btn);
       hasCafe = true;
+    } else if (totalMins >= 1260 && totalMins <= 1380) { // 21:00〜23:00
+      barGrid.appendChild(btn);
+      hasBar = true;
     }
   });
 
@@ -185,7 +187,7 @@ document.getElementById('lpForm').addEventListener('submit', async function(e) {
     form.reset();
     selectedGuests = 0; selectedDate = ''; selectedTime = '';
     goStep(1);
-    showMessage('✅ ご予約を受け付けました！\n確認メールをご確認ください。営業時間内に担当者よりご連絡いたします。', 'success');
+    showMessage('✅ ご予約を受け付けました！\n詳細をメールで送付しました。ご確認ください。', 'success');
   } catch (err) {
     showMessage('送信に失敗しました。お電話（0877-35-9499）にてご連絡ください。', 'error');
   } finally {

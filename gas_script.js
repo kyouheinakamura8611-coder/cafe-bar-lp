@@ -247,16 +247,14 @@ function setupSeatManagement() {
     '日付', '時間', '2名テーブル残数(最大2)', '4名テーブル残数(最大3)', 'カウンター残席(最大4)', '備考'
   ]]);
 
-  // 時間枠生成（カフェ・バー）
+  // 時間枠生成（カフェ07:00〜15:30 ／ バー21:00〜23:00）
   const slots = [];
-  for (let h = 11; h <= 16; h++) {
+  for (let h = 7; h <= 15; h++) {
     slots.push(String(h).padStart(2,'0') + ':00');
     slots.push(String(h).padStart(2,'0') + ':30');
   }
-  for (let h = 18; h <= 26; h++) {
-    slots.push(String(h).padStart(2,'0') + ':00');
-    slots.push(String(h).padStart(2,'0') + ':30');
-  }
+  // バー
+  ['21:00','21:30','22:00','22:30','23:00'].forEach(t => slots.push(t));
 
   // 30日分のデータを一括生成
   const today = new Date();
@@ -303,3 +301,6 @@ function addNextMonth() {
   if (rows.length > 0) sheet.getRange(lastRow + 1, 1, rows.length, 6).setValues(rows);
   SpreadsheetApp.getUi().alert('✅ 次の30日分を追加しました！');
 }
+
+// lp.js側での時間帯判定と合わせる
+// カフェ：07:00〜15:30 / バー：21:00〜23:00
