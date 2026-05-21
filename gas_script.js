@@ -232,37 +232,31 @@ function formatDate(d) {
 // ★ セットアップ：席管理シートを60日分生成
 //   Apps Scriptの「実行」ボタンでこの関数を選んで実行してください
 // ================================================================
+// ★ 実行前にスプレッドシートから「席管理」シートを手動で削除してください
 function setupSeatManagement() {
   const ss = SpreadsheetApp.getActiveSpreadsheet();
-
-  // 既存シートを削除して再作成（clearContentsより高速）
-  const existing = ss.getSheetByName('席管理');
-  if (existing) ss.deleteSheet(existing);
   const sheet = ss.insertSheet('席管理');
 
-  // 時間枠（カフェ07:00〜15:30 / バー21:00〜23:00）
-  const slots = [];
-  for (let h = 7; h <= 15; h++) {
-    slots.push(String(h).padStart(2,'0') + ':00');
-    slots.push(String(h).padStart(2,'0') + ':30');
-  }
-  ['21:00','21:30','22:00','22:30','23:00'].forEach(t => slots.push(t));
+  const SLOTS = ['07:00','07:30','08:00','08:30','09:00','09:30',
+                 '10:00','10:30','11:00','11:30','12:00','12:30',
+                 '13:00','13:30','14:00','14:30','15:00','15:30',
+                 '21:00','21:30','22:00','22:30','23:00'];
 
-  // ヘッダー＋30日分データを一括生成
-  const rows = [['日付','時間','2名テーブル残数(最大2)','4名テーブル残数(最大3)','カウンター残席(最大4)','備考']];
+  const rows = [['日付','時間','2名残数','4名残数','カウンター残席','備考']];
   const today = new Date();
+
   for (let d = 0; d < 30; d++) {
-    const date = new Date(today);
-    date.setDate(today.getDate() + d);
-    if (date.getDay() === 1) continue; // 月曜定休
-    const dateStr = formatDate(date);
-    slots.forEach(t => rows.push([dateStr, t, 2, 3, 4, '']));
+    const dt = new Date(today);
+    dt.setDate(today.getDate() + d);
+    if (dt.getDay() === 1) continue;
+    const ds = dt.getFullYear() + '-' +
+               String(dt.getMonth()+1).padStart(2,'0') + '-' +
+               String(dt.getDate()).padStart(2,'0');
+    SLOTS.forEach(t => rows.push([ds, t, 2, 3, 4, '']));
   }
 
-  // 1回の書き込みで完結（最速）
   sheet.getRange(1, 1, rows.length, 6).setValues(rows);
-
-  SpreadsheetApp.getUi().alert('✅ セットアップ完了！\n30日分の予約枠を生成しました。');
+  SpreadsheetApp.getUi().alert('✅ 完了！' + (rows.length - 1) + '行を生成しました。');
 }
 
 // 追加で次の30日分を生成する関数
