@@ -190,61 +190,116 @@
     <div class="lp-container">
       <p class="lp-label light">RESERVATION FORM</p>
       <h2 class="lp-title light">予約フォーム</h2>
-      <p class="lp-form__note">内容確認後、担当者よりご連絡いたします（営業時間内）</p>
 
-      <form class="lp-reserve-form" id="lpForm" novalidate>
-        <div class="lp-form-group">
-          <label>ご利用目的 <span class="req">*</span></label>
-          <div class="purpose-grid">
-            <label class="purpose-btn"><input type="radio" name="purpose" value="cafe" required><span>カフェ利用</span></label>
-            <label class="purpose-btn"><input type="radio" name="purpose" value="bar"><span>バー利用</span></label>
-            <label class="purpose-btn"><input type="radio" name="purpose" value="goukon"><span>合コン・個室</span></label>
-            <label class="purpose-btn"><input type="radio" name="purpose" value="event"><span>イベント参加</span></label>
-            <label class="purpose-btn"><input type="radio" name="purpose" value="party"><span>貸切パーティ</span></label>
-            <label class="purpose-btn"><input type="radio" name="purpose" value="other"><span>その他</span></label>
-          </div>
+      <!-- ステップ表示 -->
+      <div class="steps-bar">
+        <div class="step-dot active" data-step="1"><span>1</span><small>人数</small></div>
+        <div class="step-line"></div>
+        <div class="step-dot" data-step="2"><span>2</span><small>日付</small></div>
+        <div class="step-line"></div>
+        <div class="step-dot" data-step="3"><span>3</span><small>時間</small></div>
+        <div class="step-line"></div>
+        <div class="step-dot" data-step="4"><span>4</span><small>情報入力</small></div>
+      </div>
+
+      <!-- STEP 1：人数 -->
+      <div class="step-panel active" id="step1">
+        <h3 class="step-title">何名でお越しですか？</h3>
+        <div class="guest-grid">
+          <button class="guest-btn" data-num="1">1名</button>
+          <button class="guest-btn" data-num="2">2名</button>
+          <button class="guest-btn" data-num="3">3名</button>
+          <button class="guest-btn" data-num="4">4名</button>
+        </div>
+        <p class="step-note">※ 5名以上はお電話（0877-35-9499）にてご相談ください</p>
+      </div>
+
+      <!-- STEP 2：日付 -->
+      <div class="step-panel" id="step2">
+        <h3 class="step-title">ご希望の日付を選んでください</h3>
+        <input type="date" id="pickDate" class="date-input">
+        <p class="step-note">※ 月曜日は定休日です</p>
+        <div class="step-nav">
+          <button class="back-btn" onclick="goStep(1)">← 戻る</button>
+          <button class="next-btn" id="dateNextBtn" disabled>次へ →</button>
+        </div>
+      </div>
+
+      <!-- STEP 3：時間 -->
+      <div class="step-panel" id="step3">
+        <h3 class="step-title">ご希望の時間を選んでください</h3>
+        <div id="timeLoading" class="time-loading">空き状況を確認中...</div>
+        <div id="timeError" class="time-error" style="display:none"></div>
+        <div id="cafeTimes" style="display:none">
+          <p class="time-section-label">☕ CAFÉ TIME（11:00〜17:00）</p>
+          <div class="time-grid" id="cafeGrid"></div>
+        </div>
+        <div id="barTimes" style="display:none">
+          <p class="time-section-label">🍸 BAR TIME（18:00〜27:00）</p>
+          <div class="time-grid" id="barGrid"></div>
+        </div>
+        <div class="step-nav">
+          <button class="back-btn" onclick="goStep(2)">← 戻る</button>
+        </div>
+      </div>
+
+      <!-- STEP 4：情報入力 -->
+      <div class="step-panel" id="step4">
+        <div class="reserve-summary">
+          <span id="summaryGuests"></span>
+          <span class="sep">｜</span>
+          <span id="summaryDate"></span>
+          <span class="sep">｜</span>
+          <span id="summaryTime"></span>
         </div>
 
-        <div class="lp-form-row">
+        <form class="lp-reserve-form" id="lpForm" novalidate>
+          <input type="hidden" name="guests_num" id="hiddenGuests">
+          <input type="hidden" name="date"        id="hiddenDate">
+          <input type="hidden" name="time"        id="hiddenTime">
+
           <div class="lp-form-group">
-            <label>お名前 <span class="req">*</span></label>
-            <input type="text" name="name" placeholder="山田 太郎" required>
+            <label>ご利用目的 <span class="req">*</span></label>
+            <div class="purpose-grid">
+              <label class="purpose-btn"><input type="radio" name="purpose" value="cafe" required><span>カフェ利用</span></label>
+              <label class="purpose-btn"><input type="radio" name="purpose" value="bar"><span>バー利用</span></label>
+              <label class="purpose-btn"><input type="radio" name="purpose" value="goukon"><span>合コン・個室</span></label>
+              <label class="purpose-btn"><input type="radio" name="purpose" value="event"><span>イベント参加</span></label>
+              <label class="purpose-btn"><input type="radio" name="purpose" value="party"><span>貸切パーティ</span></label>
+              <label class="purpose-btn"><input type="radio" name="purpose" value="other"><span>その他</span></label>
+            </div>
           </div>
+
+          <div class="lp-form-row">
+            <div class="lp-form-group">
+              <label>お名前 <span class="req">*</span></label>
+              <input type="text" name="name" placeholder="山田 太郎" required>
+            </div>
+            <div class="lp-form-group">
+              <label>電話番号 <span class="req">*</span></label>
+              <input type="tel" name="phone" placeholder="090-0000-0000" required>
+            </div>
+          </div>
+
           <div class="lp-form-group">
-            <label>電話番号 <span class="req">*</span></label>
-            <input type="tel" name="phone" placeholder="090-0000-0000" required>
+            <label>メールアドレス <span class="req">*</span></label>
+            <input type="email" name="email" placeholder="example@email.com" required>
           </div>
-        </div>
 
-        <div class="lp-form-group">
-          <label>メールアドレス <span class="req">*</span></label>
-          <input type="email" name="email" placeholder="example@email.com" required>
-        </div>
-
-        <div class="lp-form-row">
           <div class="lp-form-group">
-            <label>ご希望日 <span class="req">*</span></label>
-            <input type="date" name="date" required>
+            <label>ご要望・ご質問</label>
+            <textarea name="message" rows="3" placeholder="アレルギー、サプライズ希望など何でもお気軽に。"></textarea>
           </div>
-          <div class="lp-form-group">
-            <label>ご利用人数</label>
-            <select name="guests">
-              <option>1〜2名</option>
-              <option>3〜4名</option>
-              <option>5〜8名</option>
-              <option>9〜20名</option>
-              <option>21名以上</option>
-            </select>
-          </div>
-        </div>
 
-        <div class="lp-form-group">
-          <label>ご要望・ご質問</label>
-          <textarea name="message" rows="4" placeholder="アレルギー、サプライズ希望、イベント詳細など何でもお気軽に。"></textarea>
-        </div>
+          <button type="submit" class="lp-submit-btn">予約を確定する</button>
+        </form>
 
-        <button type="submit" class="lp-submit-btn">予約リクエストを送信する</button>
-      </form>
+        <div class="step-nav" style="margin-top:12px">
+          <button class="back-btn" onclick="goStep(3)">← 時間を選び直す</button>
+        </div>
+      </div>
+
+      <div id="formMessage"></div>
     </div>
   </section>
 
