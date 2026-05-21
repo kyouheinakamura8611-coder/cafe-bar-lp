@@ -138,8 +138,15 @@ function saveToSheet(data) {
 
   if (!sheet) {
     sheet = ss.insertSheet('予約リスト');
-    sheet.appendRow(['受付日時','予約日','時間','名前','電話','メール','人数','テーブル','目的','ご要望']);
-    sheet.getRange(1,1,1,10).setFontWeight('bold').setBackground('#f5e6c8');
+    sheet.appendRow(['受付日時','予約日','時間','名前','電話','メール','人数','テーブル','目的','ご要望','ステータス']);
+    sheet.getRange(1,1,1,11).setFontWeight('bold').setBackground('#f5e6c8');
+  } else {
+    // ヘッダーに「ステータス」列がなければ追加
+    const header = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0];
+    if (!header.includes('ステータス')) {
+      sheet.getRange(1, header.length + 1).setValue('ステータス');
+      sheet.getRange(1, header.length + 1).setFontWeight('bold').setBackground('#f5e6c8');
+    }
   }
 
   const purposeMap = {
@@ -158,6 +165,7 @@ function saveToSheet(data) {
     data.tableAssigned || '',
     purposeMap[data.purpose] || data.purpose || '',
     data.message || '',
+    '確定',  // ステータス初期値
   ]);
 }
 
@@ -243,6 +251,64 @@ function formatTime(t) {
 // ★ セットアップ：席管理シートを60日分生成
 //   Apps Scriptの「実行」ボタンでこの関数を選んで実行してください
 // ================================================================
+// ================================================================
+// キャンセル自動検知（予約リストのステータスを「キャンセル」に変えると自動復元）
+// ※ この関数は onEdit という名前のままにしてください（自動実行されます）
+// ================================================================
+function onEdit(e) {
+  const sheet = e.range.getSheet();
+  if (sheet.getName() !== '予約リスト') return;
+
+  const col = e.range.getColumn();
+  const row = e.range.getRow();
+  if (row <= 1) return; // ヘッダー行は無視
+
+  // ステータス列（11列目）が「キャンセル」に変更された場合のみ処理
+  const header = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0];
+  const statusCol = header.indexOf('ステータス') + 1;
+  if (col !== statusCol) return;
+  if (e.value !== 'キャンセル') return;
+
+  // 予約情報を取得
+  const rowData = sheet.getRange(row, 1, 1, sheet.getLastColumn()).getValues()[0];
+  const reservationDate = formatDate(rowData[1]); // 予約日
+  const reservationTime = formatTime(rowData[2]); // 時間
+  const tableAssigned   = String(rowData[7]);      // テーブル種別
+
+  if (!reservationDate || !reservationTime) return;
+
+  // 席管理シートの対応行の席数を+1
+  restoreSeat(reservationDate, reservationTime, tableAssigned);
+}
+
+// ================================================================
+// 席数を1つ戻す（キャンセル時）
+// ================================================================
+function restoreSeat(date, time, tableType) {
+  const ss    = SpreadsheetApp.getActiveSpreadsheet();
+  const sheet = ss.getSheetByName('席管理');
+  if (!sheet) return;
+
+  const data = sheet.getDataRange().getValues();
+  for (let i = 1; i < data.length; i++) {
+    if (formatDate(data[i][0]) !== date || formatTime(data[i][1]) !== time) continue;
+
+    const MAX = { '2名テーブル': 2, '4名テーブル': 3, 'カウンター': 4 };
+
+    if (tableType === '2名テーブル') {
+      const cur = parseInt(data[i][2]) || 0;
+      sheet.getRange(i+1, 3).setValue(Math.min(cur + 1, MAX['2名テーブル']));
+    } else if (tableType === '4名テーブル') {
+      const cur = parseInt(data[i][3]) || 0;
+      sheet.getRange(i+1, 4).setValue(Math.min(cur + 1, MAX['4名テーブル']));
+    } else if (tableType === 'カウンター') {
+      const cur = parseInt(data[i][4]) || 0;
+      sheet.getRange(i+1, 5).setValue(Math.min(cur + 1, MAX['カウンター']));
+    }
+    break;
+  }
+}
+
 // ★ 実行前にスプレッドシートから「席管理」シートを手動で削除してください
 function setupSeatManagement() {
   const ss = SpreadsheetApp.getActiveSpreadsheet();
