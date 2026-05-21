@@ -234,31 +234,23 @@ function formatDate(d) {
 // ================================================================
 function setupSeatManagement() {
   const ss = SpreadsheetApp.getActiveSpreadsheet();
-  let sheet = ss.getSheetByName('席管理');
 
-  if (sheet) {
-    sheet.clearContents();
-  } else {
-    sheet = ss.insertSheet('席管理');
-  }
+  // 既存シートを削除して再作成（clearContentsより高速）
+  const existing = ss.getSheetByName('席管理');
+  if (existing) ss.deleteSheet(existing);
+  const sheet = ss.insertSheet('席管理');
 
-  // ヘッダー（1行で書き込み）
-  sheet.getRange(1,1,1,6).setValues([[
-    '日付', '時間', '2名テーブル残数(最大2)', '4名テーブル残数(最大3)', 'カウンター残席(最大4)', '備考'
-  ]]);
-
-  // 時間枠生成（カフェ07:00〜15:30 ／ バー21:00〜23:00）
+  // 時間枠（カフェ07:00〜15:30 / バー21:00〜23:00）
   const slots = [];
   for (let h = 7; h <= 15; h++) {
     slots.push(String(h).padStart(2,'0') + ':00');
     slots.push(String(h).padStart(2,'0') + ':30');
   }
-  // バー
   ['21:00','21:30','22:00','22:30','23:00'].forEach(t => slots.push(t));
 
-  // 30日分のデータを一括生成
+  // ヘッダー＋30日分データを一括生成
+  const rows = [['日付','時間','2名テーブル残数(最大2)','4名テーブル残数(最大3)','カウンター残席(最大4)','備考']];
   const today = new Date();
-  const rows  = [];
   for (let d = 0; d < 30; d++) {
     const date = new Date(today);
     date.setDate(today.getDate() + d);
@@ -267,12 +259,10 @@ function setupSeatManagement() {
     slots.forEach(t => rows.push([dateStr, t, 2, 3, 4, '']));
   }
 
-  // 一括書き込み（高速）
-  if (rows.length > 0) {
-    sheet.getRange(2, 1, rows.length, 6).setValues(rows);
-  }
+  // 1回の書き込みで完結（最速）
+  sheet.getRange(1, 1, rows.length, 6).setValues(rows);
 
-  SpreadsheetApp.getUi().alert('✅ セットアップ完了！\n30日分の予約枠を生成しました。\n数字を直接編集して席数を管理できます。\n\n※ 追加で次の30日分が必要な場合は\n「addNextMonth」関数を実行してください。');
+  SpreadsheetApp.getUi().alert('✅ セットアップ完了！\n30日分の予約枠を生成しました。');
 }
 
 // 追加で次の30日分を生成する関数
