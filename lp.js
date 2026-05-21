@@ -115,8 +115,10 @@ function renderTimeSlots(slots) {
         document.querySelectorAll('.time-btn').forEach(b => b.classList.remove('selected'));
         btn.classList.add('selected');
         selectedTime = slot.time;
-        setTimeout(() => goStep(4), 300);
-        updateSummary();
+        setTimeout(() => {
+          goStep(4);
+          updateSummary(); // goStep(4)の後に実行
+        }, 300);
       });
     }
 
