@@ -90,6 +90,9 @@
             時間とともに表情を変える空間で、<br>
             心地よいひとときをお楽しみください。
           </p>
+          <div style="margin-top:28px">
+            <a href="#reserve" class="btn btn--glass">席を予約する →</a>
+          </div>
         </div>
         <div class="concept__image">
           <img src="images/img04_lounge.jpg" alt="ラウンジの雰囲気" class="concept-img" loading="lazy">
@@ -128,6 +131,7 @@
 
       <div class="section-cta">
         <a href="#" class="btn btn--secondary">カフェメニューを見る</a>
+        <a href="#reserve" class="btn btn--glass" style="margin-left:12px">席を予約する →</a>
       </div>
     </div>
   </section>
@@ -165,6 +169,7 @@
 
       <div class="section-cta">
         <a href="#" class="btn btn--gold">バーメニューを見る</a>
+        <a href="#reserve" class="btn btn--glass-light" style="margin-left:12px">席を予約する →</a>
       </div>
     </div>
   </section>
@@ -286,6 +291,10 @@
         </div>
       </div>
 
+      <div class="float-reserve-cta" style="margin-bottom:32px">
+        <a href="#reserve" class="btn btn--glass">席を予約する →</a>
+      </div>
+
       <div class="events-note">
         <p>イベントの最新情報はSNSでもお知らせしています。フォローして最新情報をチェック！</p>
         <div class="sns-links">
@@ -325,6 +334,10 @@
     </div>
   </section>
 
+  <div class="float-reserve-cta" style="padding:40px 0 60px; background:var(--warm-white);">
+    <a href="#reserve" class="btn btn--glass">席を予約する →</a>
+  </div>
+
   <!-- ========== RESERVE ========== -->
   <section class="reserve-section" id="reserve">
     <div class="reserve-section__bg"></div>
@@ -334,82 +347,147 @@
       <p class="section-desc light">お席のご予約、個室のお問い合わせ、イベント参加申込みはこちらから。</p>
 
       <div class="reserve-inner">
+        <!-- ステップ式予約フォーム -->
         <div class="reserve-form-wrap">
-          <form class="reserve-form" id="reserveForm">
-            <div class="form-row two-col">
-              <div class="form-group">
-                <label>お名前 <span class="required">*</span></label>
-                <input type="text" name="name" placeholder="山田 太郎" required>
-              </div>
-              <div class="form-group">
-                <label>電話番号 <span class="required">*</span></label>
-                <input type="tel" name="phone" placeholder="090-0000-0000" required>
+
+          <!-- ステップ表示 -->
+          <div class="hp-steps-bar">
+            <div class="hp-step-dot active" data-step="1"><span>1</span><small>人数</small></div>
+            <div class="hp-step-line"></div>
+            <div class="hp-step-dot" data-step="2"><span>2</span><small>日付</small></div>
+            <div class="hp-step-line"></div>
+            <div class="hp-step-dot" data-step="3"><span>3</span><small>時間</small></div>
+            <div class="hp-step-line"></div>
+            <div class="hp-step-dot" data-step="4"><span>4</span><small>情報入力</small></div>
+          </div>
+
+          <div id="hp-form-message" class="hp-form-message" style="display:none"></div>
+
+          <!-- STEP 1：人数＋席タイプ -->
+          <div class="hp-step-panel active" id="hp-step1">
+            <p class="hp-step-title">何名でお越しですか？</p>
+            <select id="hp-guestSelect" class="hp-guest-select">
+              <option value="">人数を選んでください</option>
+              <option value="1">1名</option><option value="2">2名</option>
+              <option value="3">3名</option><option value="4">4名</option>
+              <option value="5">5名</option><option value="6">6名</option>
+              <option value="7">7名</option><option value="8">8名</option>
+              <option value="9">9名</option><option value="10">10名</option>
+              <option value="11">11名</option><option value="12">12名</option>
+              <option value="13">13名</option><option value="14">14名</option>
+              <option value="15">15名</option><option value="16">16名</option>
+              <option value="17">17名</option><option value="18">18名</option>
+              <option value="19">19名</option><option value="20">20名</option>
+            </select>
+            <div class="hp-guest-notices">
+              <p class="hp-notice-sm">※ テーブル席・カウンターは最大4名まで</p>
+              <p class="hp-notice-sm">※ 5名〜9名のご利用はお電話にてご相談ください（0877-35-9499）</p>
+              <p class="hp-notice-sm">※ 貸切パーティは <strong>10名以上</strong> からご予約いただけます</p>
+            </div>
+            <div id="hp-seatTypeGroup" style="display:none; margin-top:24px">
+              <p class="hp-step-title">ご希望の席タイプは？</p>
+              <div class="hp-seat-grid">
+                <button class="hp-seat-btn" data-type="table">🪑 テーブル席</button>
+                <button class="hp-seat-btn" data-type="counter">🍺 カウンター</button>
               </div>
             </div>
-            <div class="form-group">
-              <label>メールアドレス <span class="required">*</span></label>
-              <input type="email" name="email" placeholder="example@email.com" required>
+          </div>
+
+          <!-- STEP 2：日付 -->
+          <div class="hp-step-panel" id="hp-step2">
+            <p class="hp-step-title">ご希望の日付を選んでください</p>
+            <input type="date" id="hp-pickDate" class="hp-date-input">
+            <p class="hp-step-note">※ 月曜日は定休日です</p>
+            <div class="hp-step-nav">
+              <button class="hp-back-btn" onclick="hpGoStep(1)">← 戻る</button>
+              <button class="hp-next-btn" id="hp-dateNextBtn" disabled>次へ →</button>
             </div>
-            <div class="form-row two-col">
-              <div class="form-group">
-                <label>ご利用目的 <span class="required">*</span></label>
-                <select name="purpose" required>
-                  <option value="">選択してください</option>
-                  <option>通常のお食事・カフェ</option>
-                  <option>バータイム利用</option>
-                  <option>個室予約（合コン・パーティ）</option>
-                  <option>イベント参加申込み</option>
-                  <option>貸切・団体予約</option>
-                  <option>その他</option>
-                </select>
-              </div>
-              <div class="form-group">
-                <label>ご利用人数</label>
-                <select name="guests">
-                  <option>1〜2名</option>
-                  <option>3〜4名</option>
-                  <option>5〜8名</option>
-                  <option>9〜20名</option>
-                  <option>21名以上</option>
-                </select>
-              </div>
+          </div>
+
+          <!-- STEP 3：時間 -->
+          <div class="hp-step-panel" id="hp-step3">
+            <p class="hp-step-title">ご希望の時間を選んでください</p>
+            <div id="hp-timeLoading" class="hp-time-loading">空き状況を確認中...</div>
+            <div id="hp-timeError" class="hp-time-error" style="display:none"></div>
+            <div id="hp-cafeTimes" style="display:none">
+              <p class="hp-time-label">☕ CAFÉ TIME（07:00〜15:30）</p>
+              <div class="hp-time-grid" id="hp-cafeGrid"></div>
             </div>
-            <div class="form-row two-col">
-              <div class="form-group">
-                <label>ご希望日</label>
-                <input type="date" name="date">
-              </div>
-              <div class="form-group">
-                <label>ご希望時間帯</label>
-                <select name="time">
-                  <option>カフェタイム（11:00〜17:00）</option>
-                  <option>バータイム（18:00〜27:00）</option>
-                </select>
-              </div>
+            <div id="hp-barTimes" style="display:none">
+              <p class="hp-time-label">🍸 BAR TIME（21:00〜23:00）</p>
+              <div class="hp-time-grid" id="hp-barGrid"></div>
             </div>
-            <div class="form-group">
-              <label>ご要望・ご質問</label>
-              <textarea name="message" rows="4" placeholder="ご要望、アレルギー情報、その他ご質問などをご記入ください。"></textarea>
+            <div class="hp-step-nav">
+              <button class="hp-back-btn" onclick="hpGoStep(2)">← 戻る</button>
             </div>
-            <button type="submit" class="btn btn--primary btn--full">送信する</button>
-          </form>
-        </div>
+          </div>
+
+          <!-- STEP 4：情報入力 -->
+          <div class="hp-step-panel" id="hp-step4">
+            <div class="hp-reserve-summary">
+              <span id="hp-summaryGuests"></span>
+              <span class="sep">｜</span>
+              <span id="hp-summaryDate"></span>
+              <span class="sep">｜</span>
+              <span id="hp-summaryTime"></span>
+            </div>
+
+            <form id="hp-reserveForm" novalidate>
+              <input type="hidden" id="hp-hiddenGuests" name="guests_num">
+              <input type="hidden" id="hp-hiddenDate"   name="date">
+              <input type="hidden" id="hp-hiddenTime"   name="time">
+              <input type="hidden" id="hp-hiddenPurpose" name="purpose" value="cafe">
+              <input type="hidden" id="hp-hiddenSeatType" name="seat_type" value="table">
+
+              <div class="hp-bar-purpose-group" id="hp-barPurposeGroup" style="display:none">
+                <label>ご利用目的（任意）</label>
+                <div class="hp-purpose-grid">
+                  <label class="hp-purpose-btn"><input type="radio" name="hp-barPurpose" value="goukon"><span>合コン</span></label>
+                  <label class="hp-purpose-btn hp-purpose-btn--disabled"><input type="radio" name="hp-barPurpose" value="event" disabled><span>イベント参加<br><small>準備中</small></span></label>
+                  <label class="hp-purpose-btn" id="hp-partyPurposeBtn"><input type="radio" name="hp-barPurpose" value="party"><span>貸切パーティ</span></label>
+                </div>
+                <p class="hp-purpose-note">※ 未選択の場合は通常のバー利用となります</p>
+              </div>
+
+              <div class="hp-form-row">
+                <div class="hp-form-group">
+                  <label>お名前 *</label>
+                  <input type="text" name="name" placeholder="山田 太郎" required>
+                </div>
+                <div class="hp-form-group">
+                  <label>電話番号 *</label>
+                  <input type="tel" name="phone" placeholder="090-0000-0000" required>
+                </div>
+              </div>
+              <div class="hp-form-group">
+                <label>メールアドレス *</label>
+                <input type="email" name="email" placeholder="example@email.com" required>
+              </div>
+              <div class="hp-form-group">
+                <label>ご要望・ご質問</label>
+                <textarea name="message" rows="3" placeholder="アレルギー、サプライズ希望など何でもお気軽に。"></textarea>
+              </div>
+              <button type="submit" class="hp-submit-btn">予約を確定する</button>
+            </form>
+            <div class="hp-step-nav" style="margin-top:12px">
+              <button class="hp-back-btn" onclick="hpGoStep(3)">← 時間を選び直す</button>
+            </div>
+          </div>
+
+        </div><!-- /reserve-form-wrap -->
 
         <div class="reserve-info">
           <div class="info-card">
             <h3>営業時間</h3>
             <dl>
-              <dt>CAFÉ</dt>
-              <dd>11:00 〜 17:00</dd>
-              <dt>BAR</dt>
-              <dd>18:00 〜 27:00（翌3:00）</dd>
-              <dt>定休日</dt>
-              <dd>月曜日</dd>
+              <dt>CAFÉ</dt><dd>07:00 〜 15:30</dd>
+              <dt>BAR</dt><dd>21:00 〜 23:00</dd>
+              <dt>定休日</dt><dd>月曜日</dd>
             </dl>
           </div>
           <div class="info-card">
             <h3>お電話でのご予約</h3>
-            <a href="tel:03-0000-0000" class="phone-link">03-0000-0000</a>
+            <a href="tel:0877-35-9499" class="phone-link">0877-35-9499</a>
             <p class="phone-hours">受付時間：10:00〜22:00</p>
           </div>
           <div class="info-card">
