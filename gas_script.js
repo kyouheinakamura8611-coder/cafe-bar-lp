@@ -116,26 +116,51 @@ function processReservation(params) {
 
         const seatType = params.seat_type || 'table';
 
+        // テーブル割り当て判定（最初のスロットで確認）
         if (seatType === 'counter') {
-          // カウンター：人数分を一度に減らす
-          if (cntC >= guests) {
-            sheet.getRange(i+1,5).setValue(cntC - guests);
-            tableAssigned = 'カウンター';
-          } else {
-            return { status: 'full', message: 'カウンターの空き席が不足しています。' };
-          }
+          if (cntC >= guests) { tableAssigned = 'カウンター'; }
+          else return { status: 'full', message: 'カウンターの空き席が不足しています。' };
+        } else if (guests <= 2) {
+          if      (cnt2 > 0) tableAssigned = '2名テーブル';
+          else if (cnt4 > 0) tableAssigned = '4名テーブル';
+          else return { status: 'full', message: 'テーブル席が満席です。' };
         } else {
-          // テーブル席
-          if (guests <= 2) {
-            if      (cnt2 > 0) { sheet.getRange(i+1,3).setValue(cnt2-1); tableAssigned = '2名テーブル'; }
-            else if (cnt4 > 0) { sheet.getRange(i+1,4).setValue(cnt4-1); tableAssigned = '4名テーブル'; }
-            else return { status: 'full', message: 'テーブル席が満席です。' };
-          } else {
-            if (cnt4 > 0) { sheet.getRange(i+1,4).setValue(cnt4-1); tableAssigned = '4名テーブル'; }
-            else return { status: 'full', message: '4名テーブルが満席です。' };
-          }
+          if (cnt4 > 0) tableAssigned = '4名テーブル';
+          else return { status: 'full', message: '4名テーブルが満席です。' };
         }
         break;
+      }
+    }
+  }
+
+  // 2時間分（4スロット×30分）の席を確保
+  if (tableAssigned && date && time) {
+    const ss2   = SpreadsheetApp.getActiveSpreadsheet();
+    const sheet2 = ss2.getSheetByName('席管理');
+    if (sheet2) {
+      const blockTimes = [
+        time,
+        addMinutes(time, 30),
+        addMinutes(time, 60),
+        addMinutes(time, 90)
+      ];
+      const allData = sheet2.getDataRange().getValues();
+      for (let i = 1; i < allData.length; i++) {
+        if (formatDate(allData[i][0]) !== date) continue;
+        const slotTime = formatTime(allData[i][1]);
+        if (!blockTimes.includes(slotTime)) continue;
+
+        const c2 = parseInt(allData[i][2]) || 0;
+        const c4 = parseInt(allData[i][3]) || 0;
+        const cC = parseInt(allData[i][4]) || 0;
+
+        if (tableAssigned === '2名テーブル' && c2 > 0) {
+          sheet2.getRange(i+1, 3).setValue(c2 - 1);
+        } else if (tableAssigned === '4名テーブル' && c4 > 0) {
+          sheet2.getRange(i+1, 4).setValue(c4 - 1);
+        } else if (tableAssigned === 'カウンター' && cC >= guests) {
+          sheet2.getRange(i+1, 5).setValue(cC - guests);
+        }
       }
     }
   }
@@ -244,6 +269,16 @@ function sendNotificationToStore(data) {
 }
 
 // ================================================================
+// 時刻に分を加算（例："12:00" + 30 → "12:30"）
+// ================================================================
+function addMinutes(time, minutes) {
+  const [h, m] = time.split(':').map(Number);
+  const total = h * 60 + m + minutes;
+  return String(Math.floor(total / 60)).padStart(2,'0') + ':' +
+         String(total % 60).padStart(2,'0');
+}
+
+// ================================================================
 // 日付フォーマット
 // ================================================================
 function formatDate(d) {
@@ -282,7 +317,7 @@ function onEdit(e) {
   const row = e.range.getRow();
   if (row <= 1) return; // ヘッダー行は無視
 
-  // ステータス列（11列目）が「キャンセル」に変更された場合のみ処理
+  // ステータス列が「キャンセル」に変更された場合のみ処理
   const header = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0];
   const statusCol = header.indexOf('ステータス') + 1;
   if (col !== statusCol) return;
@@ -290,29 +325,40 @@ function onEdit(e) {
 
   // 予約情報を取得
   const rowData = sheet.getRange(row, 1, 1, sheet.getLastColumn()).getValues()[0];
-  const reservationDate = formatDate(rowData[1]); // 予約日
-  const reservationTime = formatTime(rowData[2]); // 時間
-  const tableAssigned   = String(rowData[7]);      // テーブル種別
+  const reservationDate = formatDate(rowData[1]);
+  const reservationTime = formatTime(rowData[2]);
+  const tableAssigned   = String(rowData[7]);
+  const guestsNum       = parseInt(rowData[6]) || 1; // 人数（"2名"→2）
 
   if (!reservationDate || !reservationTime) return;
 
-  // 席管理シートの対応行の席数を+1
-  restoreSeat(reservationDate, reservationTime, tableAssigned);
+  // 2時間分（4スロット）の席数を復元
+  restoreSeat(reservationDate, reservationTime, tableAssigned, guestsNum);
 }
 
 // ================================================================
 // 席数を1つ戻す（キャンセル時）
 // ================================================================
-function restoreSeat(date, time, tableType) {
+function restoreSeat(date, time, tableType, guests) {
   const ss    = SpreadsheetApp.getActiveSpreadsheet();
   const sheet = ss.getSheetByName('席管理');
   if (!sheet) return;
 
+  const MAX = { '2名テーブル': 2, '4名テーブル': 3, 'カウンター': 4 };
+
+  // 2時間分（4スロット×30分）を復元
+  const restoreTimes = [
+    time,
+    addMinutes(time, 30),
+    addMinutes(time, 60),
+    addMinutes(time, 90)
+  ];
+
   const data = sheet.getDataRange().getValues();
   for (let i = 1; i < data.length; i++) {
-    if (formatDate(data[i][0]) !== date || formatTime(data[i][1]) !== time) continue;
-
-    const MAX = { '2名テーブル': 2, '4名テーブル': 3, 'カウンター': 4 };
+    if (formatDate(data[i][0]) !== date) continue;
+    const slotTime = formatTime(data[i][1]);
+    if (!restoreTimes.includes(slotTime)) continue;
 
     if (tableType === '2名テーブル') {
       const cur = parseInt(data[i][2]) || 0;
@@ -322,9 +368,8 @@ function restoreSeat(date, time, tableType) {
       sheet.getRange(i+1, 4).setValue(Math.min(cur + 1, MAX['4名テーブル']));
     } else if (tableType === 'カウンター') {
       const cur = parseInt(data[i][4]) || 0;
-      sheet.getRange(i+1, 5).setValue(Math.min(cur + 1, MAX['カウンター']));
+      sheet.getRange(i+1, 5).setValue(Math.min(cur + (guests || 1), MAX['カウンター']));
     }
-    break;
   }
 }
 
