@@ -904,6 +904,38 @@ ul { list-style: none; }
   letter-spacing: 0.08em;
 }
 
+/* ===== イベントカード 準備中 ===== */
+.event-card--disabled {
+  position: relative;
+  opacity: 0.6;
+  pointer-events: none;
+}
+.event-card--disabled:hover {
+  transform: none !important;
+  box-shadow: var(--shadow) !important;
+}
+.event-coming-badge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: #888;
+  color: #fff;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  padding: 4px 12px;
+  border-radius: 50px;
+  z-index: 2;
+}
+.event-btn-disabled {
+  display: inline-block;
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+  background: #aaa !important;
+  border-color: #aaa !important;
+}
+
 /* ===== 半透明予約ボタン ===== */
 .btn--glass {
   background: rgba(201,169,110,0.18);
