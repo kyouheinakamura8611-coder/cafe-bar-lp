@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Haze Coffee&Bar | 五反田</title>
-  <meta name="description" content="昼はゆっくりコーヒーとスイーツを、夜は洗練されたカクテルと会話を。個室完備・合コン・出会いイベント多数開催。">
+  <meta name="description" content="昼はゆっくりコーヒーとスイーツを、夜は洗練されたカクテルと会話を。合コン・出会いイベント多数開催。">
   <link rel="stylesheet" href="style.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -23,7 +23,6 @@
         <ul>
           <li><a href="#cafe">CAFÉ</a></li>
           <li><a href="#bar">BAR</a></li>
-          <li><a href="#private">個室</a></li>
           <li><a href="#events">イベント</a></li>
           <li><a href="#access">アクセス</a></li>
           <li><a href="#reserve" class="nav-cta">予約する</a></li>
@@ -37,7 +36,6 @@
       <ul>
         <li><a href="#cafe" onclick="closeMobileNav()">CAFÉ</a></li>
         <li><a href="#bar" onclick="closeMobileNav()">BAR</a></li>
-        <li><a href="#private" onclick="closeMobileNav()">個室</a></li>
         <li><a href="#events" onclick="closeMobileNav()">イベント</a></li>
         <li><a href="#access" onclick="closeMobileNav()">アクセス</a></li>
         <li><a href="#reserve" onclick="closeMobileNav()" class="nav-cta">予約する</a></li>
@@ -174,64 +172,6 @@
     </div>
   </section>
 
-  <!-- ========== PRIVATE ROOMS ========== -->
-  <section class="private-section" id="private">
-    <div class="container">
-      <p class="section-label">PRIVATE ROOM</p>
-      <h2 class="section-title">完全個室で<br>プライベートな時間を</h2>
-      <p class="section-desc">
-        合コン・女子会・誕生日会・ビジネス接待まで、<br>
-        さまざまなシーンに対応する個室をご用意しています。
-      </p>
-
-      <div class="private-grid">
-        <div class="private-card">
-          <img src="images/img03_room-a.jpg" alt="個室（少人数向け）" class="private-img" loading="lazy">
-          <div class="private-card__body">
-            <span class="room-tag">2〜4名</span>
-            <h3>コンパクトルーム</h3>
-            <p>デートや少人数での会食に。落ち着いた雰囲気のプライベート空間。</p>
-            <ul class="room-features">
-              <li>✓ 完全個室・防音仕様</li>
-              <li>✓ 専用モニター完備</li>
-              <li>✓ 2時間から予約可能</li>
-            </ul>
-            <a href="#reserve" class="btn btn--outline-dark">この部屋を予約</a>
-          </div>
-        </div>
-        <div class="private-card featured">
-          <div class="featured-badge">人気 No.1</div>
-          <img src="images/img04_lounge.jpg" alt="合コン・パーティルーム" class="private-img" loading="lazy">
-          <div class="private-card__body">
-            <span class="room-tag">4〜8名</span>
-            <h3>合コンルーム</h3>
-            <p>合コン・パーティに最適な広さ。入れ替え制で安心してご利用いただけます。</p>
-            <ul class="room-features">
-              <li>✓ 完全個室・入替制</li>
-              <li>✓ ウェルカムドリンク付き</li>
-              <li>✓ 幹事サポートあり</li>
-            </ul>
-            <a href="#reserve" class="btn btn--primary">この部屋を予約</a>
-          </div>
-        </div>
-        <div class="private-card">
-          <img src="images/img03_room-a.jpg" alt="パーティルーム" class="private-img" loading="lazy">
-          <div class="private-card__body">
-            <span class="room-tag">8〜20名</span>
-            <h3>パーティルーム</h3>
-            <p>貸切パーティや大人数のイベントにも対応。プロジェクター常設。</p>
-            <ul class="room-features">
-              <li>✓ 貸切対応</li>
-              <li>✓ プロジェクター・音響完備</li>
-              <li>✓ ケータリング手配可能</li>
-            </ul>
-            <a href="#reserve" class="btn btn--outline-dark">この部屋を予約</a>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
   <!-- ========== EVENTS ========== -->
   <section class="events-section" id="events">
     <div class="events-section__bg"></div>
@@ -239,8 +179,8 @@
       <p class="section-label">EVENTS</p>
       <h2 class="section-title">出会いと楽しさを<br>生み出すイベント</h2>
       <p class="section-desc">
-        毎月開催する出会いイベントは男女ともに大好評。<br>
-        気軽に参加できる企画から本格的な婚活まで幅広くご用意。
+        出会いイベントを定期開催予定です。<br>
+        開催情報はSNSにてお知らせします。フォローしてお待ちください。
       </p>
 
       <div class="events-grid">
@@ -256,7 +196,7 @@
               <span>参加費 ¥3,500~</span>
               <span>男女各15名</span>
             </div>
-            <a href="#reserve" class="btn btn--pink">参加を申し込む</a>
+            <a href="javascript:void(0)" class="btn btn--pink" style="opacity:0.4;cursor:not-allowed;pointer-events:none;">準備中</a>
           </div>
         </div>
         <div class="event-card">
@@ -271,7 +211,7 @@
               <span>参加費 ¥4,500~</span>
               <span>男女各8名</span>
             </div>
-            <a href="#reserve" class="btn btn--amber">参加を申し込む</a>
+            <a href="javascript:void(0)" class="btn btn--amber" style="opacity:0.4;cursor:not-allowed;pointer-events:none;">準備中</a>
           </div>
         </div>
         <div class="event-card">
@@ -286,7 +226,7 @@
               <span>参加費 ¥2,500~</span>
               <span>テーマ別開催</span>
             </div>
-            <a href="#reserve" class="btn btn--teal">参加を申し込む</a>
+            <a href="javascript:void(0)" class="btn btn--teal" style="opacity:0.4;cursor:not-allowed;pointer-events:none;">準備中</a>
           </div>
         </div>
       </div>
@@ -490,11 +430,6 @@
             <a href="tel:0877-35-9499" class="phone-link">0877-35-9499</a>
             <p class="phone-hours">受付時間：10:00〜22:00</p>
           </div>
-          <div class="info-card">
-            <h3>LINE予約</h3>
-            <a href="#" class="btn btn--line btn--full">LINEで予約する</a>
-            <p class="line-note">LINEからお気軽にお問い合わせください。</p>
-          </div>
         </div>
       </div>
     </div>
@@ -549,7 +484,6 @@
       <nav class="footer__nav">
         <a href="#cafe">CAFÉ</a>
         <a href="#bar">BAR</a>
-        <a href="#private">個室</a>
         <a href="#events">イベント</a>
         <a href="#access">アクセス</a>
         <a href="#reserve">予約</a>
