@@ -202,7 +202,7 @@
         <div class="step-dot" data-step="4"><span>4</span><small>情報入力</small></div>
       </div>
 
-      <!-- STEP 1：人数 -->
+      <!-- STEP 1：人数＋席タイプ -->
       <div class="step-panel active" id="step1">
         <h3 class="step-title">何名でお越しですか？</h3>
         <div class="guest-grid">
@@ -212,6 +212,15 @@
           <button class="guest-btn" data-num="4">4名</button>
         </div>
         <p class="step-note">※ 5名以上はお電話（0877-35-9499）にてご相談ください</p>
+
+        <!-- 席タイプ選択（人数選択後に表示） -->
+        <div id="seatTypeGroup" style="display:none">
+          <h3 class="step-title" style="margin-top:28px">ご希望の席タイプは？</h3>
+          <div class="seat-type-grid">
+            <button class="seat-btn" data-type="table">🪑 テーブル席</button>
+            <button class="seat-btn" data-type="counter">🍺 カウンター</button>
+          </div>
+        </div>
       </div>
 
       <!-- STEP 2：日付 -->
@@ -254,19 +263,22 @@
         </div>
 
         <form class="lp-reserve-form" id="lpForm" novalidate>
-          <input type="hidden" name="guests_num" id="hiddenGuests">
-          <input type="hidden" name="date"        id="hiddenDate">
-          <input type="hidden" name="time"        id="hiddenTime">
-          <input type="hidden" name="purpose"     id="hiddenPurpose" value="cafe">
+          <input type="hidden" name="guests_num"  id="hiddenGuests">
+          <input type="hidden" name="date"         id="hiddenDate">
+          <input type="hidden" name="time"         id="hiddenTime">
+          <input type="hidden" name="purpose"      id="hiddenPurpose" value="cafe">
+          <input type="hidden" name="seat_type"    id="hiddenSeatType" value="table">
 
-          <!-- バー時間帯のみ表示：利用目的 -->
+          <!-- バー時間帯のみ表示：利用目的（任意） -->
           <div class="lp-form-group" id="barPurposeGroup" style="display:none">
-            <label>ご利用目的 <span class="req">*</span></label>
+            <label>ご利用目的（任意）</label>
             <div class="purpose-grid bar-purpose-grid">
-              <label class="purpose-btn"><input type="radio" name="barPurpose" value="goukon"><span>合コン・個室</span></label>
-              <label class="purpose-btn"><input type="radio" name="barPurpose" value="event"><span>イベント参加</span></label>
+              <label class="purpose-btn"><input type="radio" name="barPurpose" value="goukon"><span>合コン</span></label>
+              <label class="purpose-btn"><input type="radio" name="barPurpose" value="kojitsu"><span>個室</span></label>
+              <label class="purpose-btn purpose-btn--disabled"><input type="radio" name="barPurpose" value="event" disabled><span>イベント参加<br><small class="coming-tag">準備中</small></span></label>
               <label class="purpose-btn"><input type="radio" name="barPurpose" value="party"><span>貸切パーティ</span></label>
             </div>
+            <p class="purpose-note">※ 未選択の場合は通常のバー利用となります</p>
           </div>
 
           <div class="lp-form-row">

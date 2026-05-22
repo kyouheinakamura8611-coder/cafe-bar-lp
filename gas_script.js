@@ -52,7 +52,7 @@ function doPost(e) { return doGet(e); }
 // ================================================================
 // 空き確認
 // ================================================================
-function getAvailability(date, guests) {
+function getAvailability(date, guests, seatType) {
   if (!date) return { status: 'error', message: 'date required' };
 
   const ss    = SpreadsheetApp.getActiveSpreadsheet();
@@ -67,21 +67,28 @@ function getAvailability(date, guests) {
     if (formatDate(data[i][0]) !== date) continue;
 
     const time  = formatTime(data[i][1]);
-    const cnt2  = parseInt(data[i][2]) || 0; // 2名テーブル残数
-    const cnt4  = parseInt(data[i][3]) || 0; // 4名テーブル残数
-    const cntC  = parseInt(data[i][4]) || 0; // カウンター残席
+    const cnt2  = parseInt(data[i][2]) || 0;
+    const cnt4  = parseInt(data[i][3]) || 0;
+    const cntC  = parseInt(data[i][4]) || 0;
 
     let available = false;
-    if (guests <= 2) {
-      available = (cnt2 > 0 || cnt4 > 0 || cntC > 0);
+
+    if (seatType === 'counter') {
+      // カウンター：guests人分の空きがあるか
+      available = cntC >= guests;
     } else {
-      available = cnt4 > 0;
+      // テーブル席
+      if (guests <= 2) {
+        available = cnt2 > 0 || cnt4 > 0;
+      } else {
+        available = cnt4 > 0;
+      }
     }
 
     slots.push({ time, available });
   }
 
-  return { status: 'ok', date, guests, slots };
+  return { status: 'ok', date, guests, seatType, slots };
 }
 
 // ================================================================
@@ -107,14 +114,26 @@ function processReservation(params) {
         const cnt4 = parseInt(data[i][3]) || 0;
         const cntC = parseInt(data[i][4]) || 0;
 
-        if (guests <= 2) {
-          if      (cnt2 > 0) { sheet.getRange(i+1,3).setValue(cnt2-1); tableAssigned = '2名テーブル'; }
-          else if (cnt4 > 0) { sheet.getRange(i+1,4).setValue(cnt4-1); tableAssigned = '4名テーブル'; }
-          else if (cntC > 0) { sheet.getRange(i+1,5).setValue(cntC-1); tableAssigned = 'カウンター'; }
-          else return { status: 'full', message: 'ご指定の時間帯は満席です。' };
+        const seatType = params.seat_type || 'table';
+
+        if (seatType === 'counter') {
+          // カウンター：人数分を一度に減らす
+          if (cntC >= guests) {
+            sheet.getRange(i+1,5).setValue(cntC - guests);
+            tableAssigned = 'カウンター';
+          } else {
+            return { status: 'full', message: 'カウンターの空き席が不足しています。' };
+          }
         } else {
-          if (cnt4 > 0) { sheet.getRange(i+1,4).setValue(cnt4-1); tableAssigned = '4名テーブル'; }
-          else return { status: 'full', message: '4名席が満席です。別の時間をお選びください。' };
+          // テーブル席
+          if (guests <= 2) {
+            if      (cnt2 > 0) { sheet.getRange(i+1,3).setValue(cnt2-1); tableAssigned = '2名テーブル'; }
+            else if (cnt4 > 0) { sheet.getRange(i+1,4).setValue(cnt4-1); tableAssigned = '4名テーブル'; }
+            else return { status: 'full', message: 'テーブル席が満席です。' };
+          } else {
+            if (cnt4 > 0) { sheet.getRange(i+1,4).setValue(cnt4-1); tableAssigned = '4名テーブル'; }
+            else return { status: 'full', message: '4名テーブルが満席です。' };
+          }
         }
         break;
       }

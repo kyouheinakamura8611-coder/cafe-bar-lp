@@ -2,9 +2,10 @@
 const GAS_URL = 'https://script.google.com/macros/s/AKfycbwabqeV2enmmmriEdwml3i1rZQq3tJIs1PRkwwpArYKLdRgMHpPKG6FqFVCUPMGEGKv/exec';
 
 // ===== 選択状態 =====
-let selectedGuests = 0;
-let selectedDate   = '';
-let selectedTime   = '';
+let selectedGuests   = 0;
+let selectedDate     = '';
+let selectedTime     = '';
+let selectedSeatType = 'table'; // 'table' or 'counter'
 
 // ===== ステップ管理 =====
 function goStep(n) {
@@ -24,6 +25,19 @@ document.querySelectorAll('.guest-btn').forEach(btn => {
     document.querySelectorAll('.guest-btn').forEach(b => b.classList.remove('selected'));
     btn.classList.add('selected');
     selectedGuests = parseInt(btn.dataset.num);
+    // 席タイプ選択をリセットして表示
+    selectedSeatType = '';
+    document.querySelectorAll('.seat-btn').forEach(b => b.classList.remove('selected'));
+    document.getElementById('seatTypeGroup').style.display = 'block';
+  });
+});
+
+// ===== STEP 1：席タイプ選択 =====
+document.querySelectorAll('.seat-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.seat-btn').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+    selectedSeatType = btn.dataset.type;
     setTimeout(() => goStep(2), 300);
   });
 });
@@ -83,7 +97,9 @@ function loadTimeSlots() {
 
   const script = document.createElement('script');
   script.src = GAS_URL + '?action=availability&date=' + selectedDate +
-               '&guests=' + selectedGuests + '&callback=' + cbName;
+               '&guests=' + selectedGuests +
+               '&seatType=' + selectedSeatType +
+               '&callback=' + cbName;
   script.onerror = () => {
     clearTimeout(timeout);
     showTimeError('空き確認に失敗しました。再度お試しください。');
@@ -149,12 +165,14 @@ function isBarTime(time) {
 
 // ===== STEP 4：サマリー更新 =====
 function updateSummary() {
-  document.getElementById('summaryGuests').textContent = selectedGuests + '名';
+  const seatLabel = selectedSeatType === 'counter' ? 'カウンター' : 'テーブル席';
+  document.getElementById('summaryGuests').textContent = selectedGuests + '名・' + seatLabel;
   document.getElementById('summaryDate').textContent   = selectedDate.replace(/-/g, '/');
   document.getElementById('summaryTime').textContent   = selectedTime + '〜';
-  document.getElementById('hiddenGuests').value = selectedGuests;
-  document.getElementById('hiddenDate').value   = selectedDate;
-  document.getElementById('hiddenTime').value   = selectedTime;
+  document.getElementById('hiddenGuests').value   = selectedGuests;
+  document.getElementById('hiddenDate').value     = selectedDate;
+  document.getElementById('hiddenTime').value     = selectedTime;
+  document.getElementById('hiddenSeatType').value = selectedSeatType;
 
   // バー時間帯なら目的選択を表示、カフェなら非表示
   const barGroup = document.getElementById('barPurposeGroup');
@@ -180,11 +198,10 @@ document.getElementById('lpForm').addEventListener('submit', async function(e) {
   const phone = form.querySelector('input[name="phone"]').value.trim();
   const email = form.querySelector('input[name="email"]').value.trim();
 
-  // バー時間帯は目的選択が必須
+  // バー時間帯：目的は任意（未選択なら通常バー利用）
   if (isBarTime(selectedTime)) {
     const barPurpose = form.querySelector('input[name="barPurpose"]:checked');
-    if (!barPurpose) { showMessage('ご利用目的を選択してください。', 'error'); return; }
-    document.getElementById('hiddenPurpose').value = barPurpose.value;
+    document.getElementById('hiddenPurpose').value = barPurpose ? barPurpose.value : 'bar';
   }
 
   if (!name || !phone || !email) { showMessage('必須項目をすべて入力してください。', 'error'); return; }
@@ -200,6 +217,7 @@ document.getElementById('lpForm').addEventListener('submit', async function(e) {
     date:       selectedDate,
     time:       selectedTime,
     purpose:    document.getElementById('hiddenPurpose').value,
+    seat_type:  selectedSeatType,
     name,
     phone,
     email,
@@ -210,7 +228,8 @@ document.getElementById('lpForm').addEventListener('submit', async function(e) {
   try {
     await submitToGAS(data);
     form.reset();
-    selectedGuests = 0; selectedDate = ''; selectedTime = '';
+    selectedGuests = 0; selectedDate = ''; selectedTime = ''; selectedSeatType = 'table';
+    document.getElementById('seatTypeGroup').style.display = 'none';
     goStep(1);
     showMessage('✅ ご予約を受け付けました！\n詳細をメールで送付しました。ご確認ください。', 'success');
   } catch (err) {
