@@ -19,17 +19,24 @@ function goStep(n) {
   document.getElementById('form').scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
-// ===== STEP 1：人数選択 =====
-document.querySelectorAll('.guest-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    document.querySelectorAll('.guest-btn').forEach(b => b.classList.remove('selected'));
-    btn.classList.add('selected');
-    selectedGuests = parseInt(btn.dataset.num);
-    // 席タイプ選択をリセットして表示
-    selectedSeatType = '';
-    document.querySelectorAll('.seat-btn').forEach(b => b.classList.remove('selected'));
-    document.getElementById('seatTypeGroup').style.display = 'block';
-  });
+// ===== STEP 1：人数プルダウン =====
+document.getElementById('guestSelect').addEventListener('change', function() {
+  const val = parseInt(this.value);
+  if (!val) return;
+
+  selectedGuests = val;
+  selectedSeatType = '';
+  document.querySelectorAll('.seat-btn').forEach(b => b.classList.remove('selected'));
+
+  // 5名以上はテーブル/カウンター選択を非表示（貸切のみ）
+  const seatGroup = document.getElementById('seatTypeGroup');
+  if (val >= 5) {
+    seatGroup.style.display = 'none';
+    selectedSeatType = 'table'; // デフォルト
+    setTimeout(() => goStep(2), 300);
+  } else {
+    seatGroup.style.display = 'block';
+  }
 });
 
 // ===== STEP 1：席タイプ選択 =====
@@ -179,8 +186,18 @@ function updateSummary() {
   if (isBarTime(selectedTime)) {
     barGroup.style.display = 'block';
     document.getElementById('hiddenPurpose').value = 'bar';
-    // バー目的の選択をリセット
     document.querySelectorAll('input[name="barPurpose"]').forEach(r => r.checked = false);
+
+    // 貸切パーティは10名以上のみ有効
+    const partyInput = document.querySelector('input[name="barPurpose"][value="party"]');
+    if (partyInput) {
+      const partyLabel = partyInput.closest('.purpose-btn');
+      const isPartyOk  = selectedGuests >= 10;
+      partyInput.disabled = !isPartyOk;
+      partyLabel.classList.toggle('purpose-btn--disabled', !isPartyOk);
+      // 9名以下の時のツールチップ代わり
+      partyLabel.title = isPartyOk ? '' : '10名以上からご利用いただけます';
+    }
   } else {
     barGroup.style.display = 'none';
     document.getElementById('hiddenPurpose').value = 'cafe';
@@ -229,6 +246,7 @@ document.getElementById('lpForm').addEventListener('submit', async function(e) {
     await submitToGAS(data);
     form.reset();
     selectedGuests = 0; selectedDate = ''; selectedTime = ''; selectedSeatType = 'table';
+    document.getElementById('guestSelect').value = '';
     document.getElementById('seatTypeGroup').style.display = 'none';
     goStep(1);
     showMessage('✅ ご予約を受け付けました！\n詳細をメールで送付しました。ご確認ください。', 'success');

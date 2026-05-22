@@ -747,9 +747,9 @@ img { max-width: 100%; display: block; }
   color: #fff;
 }
 
-/* バー目的選択（4択） */
+/* バー目的選択（3択） */
 .bar-purpose-grid {
-  grid-template-columns: repeat(2, 1fr) !important;
+  grid-template-columns: repeat(3, 1fr) !important;
 }
 .purpose-note {
   font-size: 0.72rem;
@@ -787,6 +787,46 @@ img { max-width: 100%; display: block; }
 }
 .seat-btn:hover { border-color: var(--gold); color: #fff; }
 .seat-btn.selected { background: var(--gold); border-color: var(--gold); color: #fff; }
+
+/* ===== GUEST SELECT (プルダウン) ===== */
+.guest-select {
+  width: 100%;
+  background: rgba(255,255,255,0.07);
+  border: 1.5px solid rgba(201,169,110,0.35);
+  border-radius: 10px;
+  padding: 14px 16px;
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  color: #fff;
+  outline: none;
+  cursor: pointer;
+  transition: border-color 0.3s;
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%23c9a96e' d='M6 8L0 0h12z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+}
+.guest-select:focus { border-color: var(--gold); }
+.guest-select option { background: #2c2520; color: #fff; }
+
+/* 注意書き */
+.guest-notices {
+  margin-top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.notice-sm {
+  font-size: 0.72rem;
+  color: rgba(255,255,255,0.42);
+  letter-spacing: 0.03em;
+  line-height: 1.5;
+}
+.notice-sm strong {
+  color: var(--gold-light);
+  font-weight: 500;
+}
 
 /* ===== DATE INPUT ===== */
 .date-input {
