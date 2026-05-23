@@ -397,14 +397,14 @@ function setupSeatManagement() {
   }
 
   sheet.getRange(1, 1, rows.length, 6).setValues(rows);
-  SpreadsheetApp.getUi().alert('✅ 完了！' + (rows.length - 1) + '行を生成しました。');
+  Logger.log('✅ 完了！' + (rows.length - 1) + '行を生成しました。');
 }
 
 // 追加で次の30日分を生成する関数
 function addNextMonth() {
   const ss    = SpreadsheetApp.getActiveSpreadsheet();
   const sheet = ss.getSheetByName('席管理');
-  if (!sheet) { SpreadsheetApp.getUi().alert('先にsetupSeatManagementを実行してください。'); return; }
+  if (!sheet) { Logger.log('先にsetupSeatManagementを実行してください。'); return; }
 
   const lastRow  = sheet.getLastRow();
   const lastDate = lastRow > 1 ? new Date(sheet.getRange(lastRow, 1).getValue()) : new Date();
@@ -424,7 +424,7 @@ function addNextMonth() {
   }
 
   if (rows.length > 0) sheet.getRange(lastRow + 1, 1, rows.length, 6).setValues(rows);
-  SpreadsheetApp.getUi().alert('✅ 次の30日分を追加しました！');
+  Logger.log('✅ 次の30日分を追加しました！');
 }
 
 // lp.js側での時間帯判定と合わせる
