@@ -151,7 +151,7 @@ function renderTimeSlots(slots) {
     if (totalMins >= 420 && totalMins <= 930) {   // 7:00〜15:30
       cafeGrid.appendChild(btn);
       hasCafe = true;
-    } else if (totalMins >= 1260 && totalMins <= 1380) { // 21:00〜23:00
+    } else if (totalMins >= 1260 && totalMins <= 1410) { // 21:00〜23:30
       barGrid.appendChild(btn);
       hasBar = true;
     }
@@ -167,7 +167,8 @@ function renderTimeSlots(slots) {
 // ===== バー時間帯判定 =====
 function isBarTime(time) {
   const [h, m] = time.split(':').map(Number);
-  return (h * 60 + m) >= 1260; // 21:00以降
+  const mins = h * 60 + m;
+  return mins >= 1260 && mins <= 1410; // 21:00〜23:30
 }
 
 // ===== STEP 4：サマリー更新 =====
