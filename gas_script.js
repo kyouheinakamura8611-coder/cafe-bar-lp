@@ -373,10 +373,16 @@ function restoreSeat(date, time, tableType, guests) {
   }
 }
 
-// ★ 実行前にスプレッドシートから「席管理」シートを手動で削除してください
 function setupSeatManagement() {
   const ss = SpreadsheetApp.getActiveSpreadsheet();
-  const sheet = ss.insertSheet('席管理');
+
+  // 既存シートがあれば中身を消して再利用、なければ新規作成
+  let sheet = ss.getSheetByName('席管理');
+  if (sheet) {
+    sheet.clearContents();
+  } else {
+    sheet = ss.insertSheet('席管理');
+  }
 
   const SLOTS = ['07:00','07:30','08:00','08:30','09:00','09:30',
                  '10:00','10:30','11:00','11:30','12:00','12:30',
