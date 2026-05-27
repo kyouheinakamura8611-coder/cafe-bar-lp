@@ -154,6 +154,21 @@ function renderTimeSlots(slots) {
   }
 }
 
+// ===== バー目的ラジオ：再タップで選択解除 =====
+let _lastBarPurpose = null;
+document.querySelectorAll('input[name="barPurpose"]').forEach(radio => {
+  radio.addEventListener('click', function () {
+    if (_lastBarPurpose === this) {
+      this.checked = false;
+      _lastBarPurpose = null;
+      document.getElementById('hiddenPurpose').value = 'bar';
+    } else {
+      _lastBarPurpose = this;
+      document.getElementById('hiddenPurpose').value = this.value;
+    }
+  });
+});
+
 // ===== バー時間帯判定 =====
 function isBarTime(time) {
   const [h, m] = time.split(':').map(Number);
@@ -178,6 +193,7 @@ function updateSummary() {
     barGroup.style.display = 'block';
     document.getElementById('hiddenPurpose').value = 'bar';
     document.querySelectorAll('input[name="barPurpose"]').forEach(r => r.checked = false);
+    _lastBarPurpose = null;
 
     // 貸切パーティは10名以上のみ有効
     const partyInput = document.querySelector('input[name="barPurpose"][value="party"]');

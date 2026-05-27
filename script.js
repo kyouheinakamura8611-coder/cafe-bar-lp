@@ -192,6 +192,21 @@ function hpLoadTimeSlots() {
   document.getElementById('hp-barTimes').style.display = 'block';
 }
 
+// ===== バー目的ラジオ：再タップで選択解除（HP用）=====
+let _lastHpBarPurpose = null;
+document.querySelectorAll('input[name="hp-barPurpose"]').forEach(radio => {
+  radio.addEventListener('click', function () {
+    if (_lastHpBarPurpose === this) {
+      this.checked = false;
+      _lastHpBarPurpose = null;
+      document.getElementById('hp-hiddenPurpose').value = 'bar';
+    } else {
+      _lastHpBarPurpose = this;
+      document.getElementById('hp-hiddenPurpose').value = this.value;
+    }
+  });
+});
+
 function hpShowTimeError(msg) {
   document.getElementById('hp-timeLoading').style.display = 'none';
   const el = document.getElementById('hp-timeError');
@@ -252,6 +267,7 @@ function hpUpdateSummary() {
     barGrp.style.display = 'block';
     document.getElementById('hp-hiddenPurpose').value = 'bar';
     document.querySelectorAll('input[name="hp-barPurpose"]').forEach(r => r.checked = false);
+    _lastHpBarPurpose = null;
     const partyBtn   = document.querySelector('input[name="hp-barPurpose"][value="party"]');
     const partyLabel = document.getElementById('hp-partyPurposeBtn');
     if (partyBtn && partyLabel) {
