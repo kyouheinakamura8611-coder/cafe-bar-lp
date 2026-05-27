@@ -76,43 +76,32 @@ dateNextBtn.addEventListener('click', () => {
   loadTimeSlots();
 });
 
-// ===== STEP 3：時間帯読み込み（JSONP）=====
+// ===== STEP 3：時間帯を静的表示（送信時にGAS側で空き確認）=====
 function loadTimeSlots() {
-  document.getElementById('timeLoading').style.display = 'block';
+  document.getElementById('timeLoading').style.display = 'none';
   document.getElementById('timeError').style.display   = 'none';
   document.getElementById('cafeTimes').style.display   = 'none';
-  document.getElementById('barTimes').style.display    = 'none';
   document.getElementById('cafeGrid').innerHTML = '';
   document.getElementById('barGrid').innerHTML  = '';
 
-  const cbName = 'gasAvailCb_' + Date.now();
-  const timeout = setTimeout(() => {
-    delete window[cbName];
-    showTimeError('タイムアウトしました。ページを再読み込みしてください。');
-  }, 10000);
+  const BAR_SLOTS = ['21:00','21:30','22:00','22:30','23:00','23:30'];
+  const barGrid   = document.getElementById('barGrid');
 
-  window[cbName] = (data) => {
-    clearTimeout(timeout);
-    delete window[cbName];
-    document.getElementById('timeLoading').style.display = 'none';
+  BAR_SLOTS.forEach(slot => {
+    const btn = document.createElement('button');
+    btn.type        = 'button';
+    btn.className   = 'time-btn';
+    btn.textContent = slot;
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.time-btn').forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+      selectedTime = slot;
+      setTimeout(() => { goStep(4); updateSummary(); }, 300);
+    });
+    barGrid.appendChild(btn);
+  });
 
-    if (data.status !== 'ok' || !data.slots || data.slots.length === 0) {
-      showTimeError('この日の予約枠が見つかりません。別の日をお選びください。');
-      return;
-    }
-    renderTimeSlots(data.slots);
-  };
-
-  const script = document.createElement('script');
-  script.src = GAS_URL + '?action=availability&date=' + selectedDate +
-               '&guests=' + selectedGuests +
-               '&seatType=' + selectedSeatType +
-               '&callback=' + cbName;
-  script.onerror = () => {
-    clearTimeout(timeout);
-    showTimeError('空き確認に失敗しました。再度お試しください。');
-  };
-  document.head.appendChild(script);
+  document.getElementById('barTimes').style.display = 'block';
 }
 
 function showTimeError(msg) {
