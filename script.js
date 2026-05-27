@@ -19,50 +19,100 @@ function closeMobileNav() {
   mobileNav.classList.remove('open');
 }
 
-// ===== NEXT EVENT スライドショー =====
+// ===== NEXT EVENT スライドショー（images/slideshow/ フォルダから自動読み込み）=====
 (function () {
-  const INTERVAL = 4000; // 切り替え間隔（ミリ秒）4000 = 4秒
+  const INTERVAL   = 4000; // 切り替え間隔（ミリ秒）
+  const REPO       = 'kyouheinakamura8611-coder/cafe-bar-lp';
+  const FOLDER     = 'images/slideshow';
+  const API_URL    = 'https://api.github.com/repos/' + REPO + '/contents/' + FOLDER;
+  const CACHE_KEY  = 'hz_slide_v1';
+  const CACHE_MINS = 10; // キャッシュ保持時間（分）
 
   const slideshow = document.getElementById('eventSlideshow');
   const dotsWrap  = document.getElementById('slideDots');
   if (!slideshow) return;
 
-  const imgs = Array.from(slideshow.querySelectorAll('.slide-img'));
-  if (imgs.length <= 1) return; // 1枚以下はスライド不要
+  // ===== GitHub APIから画像URL一覧を取得 =====
+  async function fetchImageUrls() {
+    // セッションキャッシュ確認
+    try {
+      const c = JSON.parse(sessionStorage.getItem(CACHE_KEY) || 'null');
+      if (c && Date.now() - c.ts < CACHE_MINS * 60000) return c.urls;
+    } catch (e) {}
 
-  let current = 0;
+    const res   = await fetch(API_URL);
+    if (!res.ok) throw new Error('API error');
+    const files = await res.json();
 
-  // ドットを動的生成
-  imgs.forEach((_, i) => {
-    const dot = document.createElement('button');
-    dot.className = 'slide-dot' + (i === 0 ? ' active' : '');
-    dot.setAttribute('aria-label', (i + 1) + '枚目');
-    dot.addEventListener('click', () => goTo(i));
-    dotsWrap.appendChild(dot);
-  });
+    const urls = files
+      .filter(f => f.type === 'file' && /\.(jpg|jpeg|png|webp|gif)$/i.test(f.name))
+      .sort((a, b) => a.name.localeCompare(b.name)) // ファイル名順
+      .map(f => f.download_url);
 
-  function goTo(n) {
-    imgs[current].classList.remove('active');
-    dotsWrap.children[current].classList.remove('active');
-    current = (n + imgs.length) % imgs.length;
-    imgs[current].classList.add('active');
-    dotsWrap.children[current].classList.add('active');
+    sessionStorage.setItem(CACHE_KEY, JSON.stringify({ ts: Date.now(), urls }));
+    return urls;
   }
 
-  // 自動切り替え（ホバー中は停止）
-  let timer = setInterval(() => goTo(current + 1), INTERVAL);
-  slideshow.addEventListener('mouseenter', () => clearInterval(timer));
-  slideshow.addEventListener('mouseleave', () => {
-    timer = setInterval(() => goTo(current + 1), INTERVAL);
-  });
+  // ===== スライドショーを構築 =====
+  function buildSlideshow(urls) {
+    slideshow.innerHTML = '';
+    urls.forEach((url, i) => {
+      const img     = document.createElement('img');
+      img.src       = url;
+      img.alt       = 'Event ' + (i + 1);
+      img.className = 'slide-img' + (i === 0 ? ' active' : '');
+      img.loading   = 'lazy';
+      slideshow.appendChild(img);
+    });
+    startSlideshow();
+  }
 
-  // スワイプ対応（スマホ）
-  let startX = 0;
-  slideshow.addEventListener('touchstart', e => { startX = e.touches[0].clientX; }, { passive: true });
-  slideshow.addEventListener('touchend',   e => {
-    const diff = startX - e.changedTouches[0].clientX;
-    if (Math.abs(diff) > 50) goTo(current + (diff > 0 ? 1 : -1));
-  });
+  // ===== スライドショー動作 =====
+  function startSlideshow() {
+    const imgs = Array.from(slideshow.querySelectorAll('.slide-img'));
+    if (imgs.length <= 1) return;
+
+    let current = 0;
+    dotsWrap.innerHTML = '';
+
+    imgs.forEach((_, i) => {
+      const dot = document.createElement('button');
+      dot.className = 'slide-dot' + (i === 0 ? ' active' : '');
+      dot.setAttribute('aria-label', (i + 1) + '枚目');
+      dot.addEventListener('click', () => goTo(i));
+      dotsWrap.appendChild(dot);
+    });
+
+    function goTo(n) {
+      imgs[current].classList.remove('active');
+      dotsWrap.children[current]?.classList.remove('active');
+      current = (n + imgs.length) % imgs.length;
+      imgs[current].classList.add('active');
+      dotsWrap.children[current]?.classList.add('active');
+    }
+
+    let timer = setInterval(() => goTo(current + 1), INTERVAL);
+    slideshow.addEventListener('mouseenter', () => clearInterval(timer));
+    slideshow.addEventListener('mouseleave', () => {
+      timer = setInterval(() => goTo(current + 1), INTERVAL);
+    });
+
+    // スワイプ（スマホ）
+    let startX = 0;
+    slideshow.addEventListener('touchstart', e => { startX = e.touches[0].clientX; }, { passive: true });
+    slideshow.addEventListener('touchend',   e => {
+      const diff = startX - e.changedTouches[0].clientX;
+      if (Math.abs(diff) > 50) goTo(current + (diff > 0 ? 1 : -1));
+    });
+  }
+
+  // ===== 初期化 =====
+  fetchImageUrls()
+    .then(urls => {
+      if (urls.length > 0) buildSlideshow(urls);
+      else startSlideshow(); // フォールバック（既存img使用）
+    })
+    .catch(() => startSlideshow()); // APIエラー時もフォールバック
 })();
 
 // ===== Fade-up on scroll =====

@@ -231,16 +231,16 @@
              表示間隔：style.cssの --slide-interval で変更可能
              =================================================== -->
         <div class="next-event__image-wrap">
+          <!--
+          ★ 画像管理方法 ★
+          images/slideshow/ フォルダに画像を入れるだけで自動表示されます。
+          削除すると次回ページ読み込み時に消えます。
+          （対応形式：jpg / jpeg / png / webp / gif）
+          -->
           <div class="event-slideshow" id="eventSlideshow">
-
-            <!-- ▼▼▼ ここの img を追加・削除して画像を管理 ▼▼▼ -->
-            <img src="images/event01.jpg" alt="Event Image 1" class="slide-img active">
-            <img src="images/event02.jpg" alt="Event Image 2" class="slide-img">
-            <img src="images/event03.jpg" alt="Event Image 3" class="slide-img">
-            <img src="images/event04.jpg" alt="Event Image 4" class="slide-img">
-            <img src="images/event05.jpg" alt="Event Image 5" class="slide-img">
-            <!-- ▲▲▲ ここの img を追加・削除して画像を管理 ▲▲▲ -->
-
+            <!-- JavaScript が images/slideshow/ フォルダから自動読み込み -->
+            <!-- フォールバック用（API失敗時） -->
+            <img src="images/slideshow/event01.jpg" alt="Event 1" class="slide-img active" data-fallback>
           </div>
           <!-- スライドドット（自動生成・編集不要） -->
           <div class="slide-dots" id="slideDots"></div>
