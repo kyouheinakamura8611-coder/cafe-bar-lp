@@ -19,6 +19,52 @@ function closeMobileNav() {
   mobileNav.classList.remove('open');
 }
 
+// ===== NEXT EVENT スライドショー =====
+(function () {
+  const INTERVAL = 4000; // 切り替え間隔（ミリ秒）4000 = 4秒
+
+  const slideshow = document.getElementById('eventSlideshow');
+  const dotsWrap  = document.getElementById('slideDots');
+  if (!slideshow) return;
+
+  const imgs = Array.from(slideshow.querySelectorAll('.slide-img'));
+  if (imgs.length <= 1) return; // 1枚以下はスライド不要
+
+  let current = 0;
+
+  // ドットを動的生成
+  imgs.forEach((_, i) => {
+    const dot = document.createElement('button');
+    dot.className = 'slide-dot' + (i === 0 ? ' active' : '');
+    dot.setAttribute('aria-label', (i + 1) + '枚目');
+    dot.addEventListener('click', () => goTo(i));
+    dotsWrap.appendChild(dot);
+  });
+
+  function goTo(n) {
+    imgs[current].classList.remove('active');
+    dotsWrap.children[current].classList.remove('active');
+    current = (n + imgs.length) % imgs.length;
+    imgs[current].classList.add('active');
+    dotsWrap.children[current].classList.add('active');
+  }
+
+  // 自動切り替え（ホバー中は停止）
+  let timer = setInterval(() => goTo(current + 1), INTERVAL);
+  slideshow.addEventListener('mouseenter', () => clearInterval(timer));
+  slideshow.addEventListener('mouseleave', () => {
+    timer = setInterval(() => goTo(current + 1), INTERVAL);
+  });
+
+  // スワイプ対応（スマホ）
+  let startX = 0;
+  slideshow.addEventListener('touchstart', e => { startX = e.touches[0].clientX; }, { passive: true });
+  slideshow.addEventListener('touchend',   e => {
+    const diff = startX - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 50) goTo(current + (diff > 0 ? 1 : -1));
+  });
+})();
+
 // ===== Fade-up on scroll =====
 const fadeEls = document.querySelectorAll(
   '.menu-card, .private-card, .event-card, .concept__text, .concept__image, .gallery-item, .info-card'

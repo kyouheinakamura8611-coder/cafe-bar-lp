@@ -224,14 +224,24 @@
     <div class="container">
       <div class="next-event__inner">
 
-        <!-- ▼ イベント画像（src="..."の URL を変更） -->
+        <!-- ===================================================
+             ▼ イベント画像スライドショー
+             画像の追加：<img src="URL" alt="説明"> を1行追加するだけ
+             画像の削除：該当の<img>行を削除するだけ
+             表示間隔：style.cssの --slide-interval で変更可能
+             =================================================== -->
         <div class="next-event__image-wrap">
-          <div class="next-event__image-placeholder">
-            <span>EVENT IMAGE</span>
+          <div class="event-slideshow" id="eventSlideshow">
+
+            <!-- ▼▼▼ ここの img を追加・削除して画像を管理 ▼▼▼ -->
+            <img src="images/img05_bar.jpg"        alt="Haze Bar" class="slide-img active">
+            <img src="images/img02_exterior.jpg"   alt="Haze Bar 外観" class="slide-img">
+            <img src="images/img03_room-a.jpg"     alt="Haze Bar 店内" class="slide-img">
+            <!-- ▲▲▲ ここの img を追加・削除して画像を管理 ▲▲▲ -->
+
           </div>
-          <!-- 画像がある場合はこちらを使用（上のプレースホルダーを削除）
-          <img src="【画像URLをここに】" alt="Jazz & Vinyl Night" class="next-event__img" loading="lazy">
-          -->
+          <!-- スライドドット（自動生成・編集不要） -->
+          <div class="slide-dots" id="slideDots"></div>
         </div>
 
         <!-- ▼ テキスト情報 -->
