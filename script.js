@@ -100,9 +100,10 @@ if (hpPickDate) {
   const today = new Date();
   hpPickDate.min = today.toISOString().split('T')[0];
   hpPickDate.addEventListener('change', () => {
-    const d = new Date(hpPickDate.value + 'T00:00:00');
-    if (d.getDay() === 1) {
-      hpPickDate.setCustomValidity('月曜日は定休日です');
+    const d   = new Date(hpPickDate.value + 'T00:00:00');
+    const day = d.getDay();
+    if (day !== 5 && day !== 6) { // 金(5)・土(6)のみ営業
+      hpPickDate.setCustomValidity('営業日は金曜日・土曜日のみです');
       hpDateNextBtn.disabled = true;
     } else {
       hpPickDate.setCustomValidity('');

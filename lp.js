@@ -53,14 +53,15 @@ document.querySelectorAll('.seat-btn').forEach(btn => {
 const pickDate    = document.getElementById('pickDate');
 const dateNextBtn = document.getElementById('dateNextBtn');
 
-// 今日以降・月曜除外
+// 今日以降・金土のみ
 const today = new Date();
 pickDate.min = today.toISOString().split('T')[0];
 
 pickDate.addEventListener('change', () => {
-  const d = new Date(pickDate.value + 'T00:00:00');
-  if (d.getDay() === 1) {
-    pickDate.setCustomValidity('月曜日は定休日です');
+  const d   = new Date(pickDate.value + 'T00:00:00');
+  const day = d.getDay();
+  if (day !== 5 && day !== 6) { // 金(5)・土(6)のみ営業
+    pickDate.setCustomValidity('営業日は金曜日・土曜日のみです');
     dateNextBtn.disabled = true;
   } else {
     pickDate.setCustomValidity('');

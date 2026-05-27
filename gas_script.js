@@ -241,7 +241,7 @@ ${STORE_NAME}
 〒769-0201 香川県綾歌郡宇多津町浜一番丁７−１
 TEL: 0877-35-9499
 CAFÉ 11:00〜17:00 ／ BAR 18:00〜27:00
-定休日：月曜日
+営業日：金曜日・土曜日
   `.trim();
   GmailApp.sendEmail(data.email, subject, body);
 }
@@ -395,7 +395,7 @@ function setupSeatManagement() {
   for (let d = 0; d < 30; d++) {
     const dt = new Date(today);
     dt.setDate(today.getDate() + d);
-    if (dt.getDay() === 1) continue;
+    if (dt.getDay() !== 5 && dt.getDay() !== 6) continue; // 金・土のみ営業
     const ds = dt.getFullYear() + '-' +
                String(dt.getMonth()+1).padStart(2,'0') + '-' +
                String(dt.getDate()).padStart(2,'0');
@@ -424,7 +424,7 @@ function addNextMonth() {
   for (let d = 0; d < 30; d++) {
     const date = new Date(lastDate);
     date.setDate(lastDate.getDate() + d);
-    if (date.getDay() === 1) continue;
+    if (date.getDay() !== 5 && date.getDay() !== 6) continue; // 金・土のみ営業
     const dateStr = formatDate(date);
     slots.forEach(t => rows.push([dateStr, t, 2, 3, 4, '']));
   }
