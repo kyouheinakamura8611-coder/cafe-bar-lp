@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Haze Coffee&Bar | 宇多津</title>
-  <meta name="description" content="昼はゆっくりコーヒーとスイーツを、夜は洗練されたカクテルと会話を。合コン・出会いイベント多数開催。">
+  <title>Haze Bar | 宇多津</title>
+  <meta name="description" content="宇多津の夜を彩るバー。洗練されたカクテルと出会いの場。合コン・イベント多数開催。">
   <link rel="stylesheet" href="style.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -21,7 +21,6 @@
       </a>
       <nav class="header__nav">
         <ul>
-          <li><a href="#cafe">CAFÉ</a></li>
           <li><a href="#bar">BAR</a></li>
           <li><a href="#events">イベント</a></li>
           <li><a href="#access">アクセス</a></li>
@@ -34,7 +33,6 @@
     </div>
     <nav class="mobile-nav" id="mobileNav">
       <ul>
-        <li><a href="#cafe" onclick="closeMobileNav()">CAFÉ</a></li>
         <li><a href="#bar" onclick="closeMobileNav()">BAR</a></li>
         <li><a href="#events" onclick="closeMobileNav()">イベント</a></li>
         <li><a href="#access" onclick="closeMobileNav()">アクセス</a></li>
@@ -53,20 +51,20 @@
       <p class="hero__eyebrow">宇多津 / UTAZU</p>
       <h1 class="hero__title">
         <span class="hero__title-main">HAZE</span>
-        <span class="hero__title-sub">COFFEE &amp; BAR</span>
+        <span class="hero__title-sub">BAR</span>
       </h1>
       <p class="hero__catch">出会いと会話をもっと豊かに。</p>
       <div class="hero__hours">
-        <span>CAFÉ 11:00 – 17:00</span>
+        <span>OPEN 21:00</span>
         <span class="separator">|</span>
-        <span>BAR 21:00–24:00</span>
+        <span>CLOSE 24:00（L.O. 23:30）</span>
       </div>
       <div class="hero__cta">
         <a href="#reserve" class="btn btn--primary">席を予約する</a>
         <a href="#events" class="btn btn--outline">イベントを見る</a>
       </div>
     </div>
-    <a href="#cafe" class="hero__scroll">
+    <a href="#bar" class="hero__scroll">
       <span>SCROLL</span>
       <span class="scroll-line"></span>
     </a>
@@ -78,15 +76,15 @@
       <div class="concept__inner">
         <div class="concept__text">
           <p class="section-label">CONCEPT</p>
-          <h2 class="section-title">一杯のコーヒーから、<br>ひとつの出会いまで。</h2>
+          <h2 class="section-title">ひとつの出会いが、<br>特別な夜になる。</h2>
           <p class="concept__body">
-            Haze Coffee&Barは、<br>
-            昼は静かに過ごせるカフェ、<br>
-            夜は人と人がつながるバー。
+            Haze Barは、人と人がつながる夜の空間。<br>
+            バーテンダーが丁寧に仕上げる一杯と<br>
+            心地よい音楽が、会話を彩ります。
           </p>
           <p class="concept__body">
-            時間とともに表情を変える空間で、<br>
-            心地よいひとときをお楽しみください。
+            合コンや出会いのイベントも定期開催。<br>
+            特別な夜をご用意しています。
           </p>
           <div style="margin-top:28px">
             <a href="#reserve" class="btn btn--glass">席を予約する →</a>
@@ -95,41 +93,6 @@
         <div class="concept__image">
           <img src="images/img04_lounge.jpg" alt="ラウンジの雰囲気" class="concept-img" loading="lazy">
         </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ========== CAFÉ ========== -->
-  <section class="cafe-section" id="cafe">
-    <div class="container">
-      <p class="section-label">CAFÉ TIME 11:00–17:00</p>
-      <h2 class="section-title">昼のカフェタイム</h2>
-      <p class="section-desc">こだわりの豆から丁寧に淹れるコーヒーと、<br>シェフ手作りのスイーツでゆっくりとしたひとときを。</p>
-
-      <div class="menu-grid">
-        <div class="menu-card">
-          <img src="https://images.unsplash.com/photo-1618967987206-e788af41a539?auto=format&fit=crop&w=700&q=80" alt="シグネチャーブレンドコーヒー" class="menu-img" loading="lazy">
-          <h3>シグネチャーブレンド</h3>
-          <p>深みのある香りとやわらかな苦み。自家焙煎のオリジナルブレンド。</p>
-          <span class="price">¥650~</span>
-        </div>
-        <div class="menu-card">
-          <img src="https://images.unsplash.com/photo-1734041291024-15273c5a88fa?auto=format&fit=crop&w=700&q=80" alt="季節のパフェ" class="menu-img" loading="lazy">
-          <h3>季節のパフェ</h3>
-          <p>旬のフルーツをふんだんに使った、目でも楽しめる一品。</p>
-          <span class="price">¥1,200~</span>
-        </div>
-        <div class="menu-card">
-          <img src="https://images.unsplash.com/photo-1563902483976-838df753f4c9?auto=format&fit=crop&w=700&q=80" alt="ランチプレート" class="menu-img" loading="lazy">
-          <h3>ランチプレート</h3>
-          <p>日替わりの軽食プレート。ドリンクセットでお得に。</p>
-          <span class="price">¥1,500~</span>
-        </div>
-      </div>
-
-      <div class="section-cta">
-        <a href="#" class="btn btn--secondary">カフェメニューを見る</a>
-        <a href="#reserve" class="btn btn--glass" style="margin-left:12px">席を予約する →</a>
       </div>
     </div>
   </section>
@@ -353,7 +316,6 @@
             <div id="hp-timeLoading" class="hp-time-loading">空き状況を確認中...</div>
             <div id="hp-timeError" class="hp-time-error" style="display:none"></div>
             <div id="hp-cafeTimes" style="display:none">
-              <p class="hp-time-label">☕ CAFÉ TIME（07:00〜15:30）</p>
               <div class="hp-time-grid" id="hp-cafeGrid"></div>
             </div>
             <div id="hp-barTimes" style="display:none">
@@ -423,8 +385,9 @@
           <div class="info-card">
             <h3>営業時間</h3>
             <dl>
-              <dt>CAFÉ</dt><dd>07:00 〜 15:30</dd>
-              <dt>BAR</dt><dd>21:00 〜 24:00（L.O. 23:30）</dd>
+              <dt>OPEN</dt><dd>21:00</dd>
+              <dt>CLOSE</dt><dd>24:00</dd>
+              <dt>L.O.</dt><dd>23:30</dd>
               <dt>定休日</dt><dd>月曜日</dd>
             </dl>
           </div>
@@ -432,8 +395,7 @@
             <h3>お電話でのご予約</h3>
             <a href="tel:0877-35-9499" class="phone-link">0877-35-9499</a>
             <dl style="margin-top:8px">
-              <dt>CAFÉ</dt><dd>07:00 〜 15:30</dd>
-              <dt>BAR</dt><dd>21:00 〜 23:00</dd>
+              <dt>受付</dt><dd>21:00 〜 23:00</dd>
             </dl>
           </div>
         </div>
@@ -465,12 +427,9 @@
               「五反田駅」東口より徒歩3分
             </dd>
             <dt>電話</dt>
-            <dd><a href="tel:03-0000-0000">03-0000-0000</a></dd>
+            <dd><a href="tel:0877-35-9499">0877-35-9499</a></dd>
             <dt>営業時間</dt>
-            <dd>
-              CAFÉ 11:00〜17:00<br>
-              BAR 21:00〜24:00（L.O. 23:30）
-            </dd>
+            <dd>21:00 〜 24:00（L.O. 23:30）</dd>
             <dt>定休日</dt>
             <dd>月曜日</dd>
           </dl>
@@ -488,7 +447,6 @@
         <span class="logo-sub">COFFEE &amp; BAR</span>
       </div>
       <nav class="footer__nav">
-        <a href="#cafe">CAFÉ</a>
         <a href="#bar">BAR</a>
         <a href="#events">イベント</a>
         <a href="#access">アクセス</a>

@@ -180,8 +180,8 @@ function hpRenderTimeSlots(slots) {
 
     const [hh, mm] = slot.time.split(':').map(Number);
     const mins = hh * 60 + mm;
-    if (mins >= 420 && mins <= 930) { cafeGrid.appendChild(btn); hasCafe = true; }
-    else if (mins >= 1260 && mins <= 1410) { barGrid.appendChild(btn); hasBar = true; }
+    // バーのみ表示（カフェ時間帯は非表示）
+    if (mins >= 1260 && mins <= 1410) { barGrid.appendChild(btn); hasBar = true; }
   });
 
   if (hasCafe) document.getElementById('hp-cafeTimes').style.display = 'block';
