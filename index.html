@@ -140,59 +140,60 @@
     <div class="events-section__bg"></div>
     <div class="container">
       <p class="section-label">EVENTS</p>
-      <h2 class="section-title">出会いと楽しさを<br>生み出すイベント</h2>
+      <h2 class="section-title">合コン・イベント・<br>貸し切りパーティ</h2>
       <p class="section-desc">
-        出会いイベントを定期開催予定です。<br>
-        開催情報はSNSにてお知らせします。フォローしてお待ちください。
+        Haze Barは特別な夜のご利用も大歓迎。<br>
+        目的に合わせた最高の時間をご用意します。
       </p>
 
       <div class="events-grid">
+        <!-- 合コン：準備中 -->
         <div class="event-card event-card--disabled">
           <div class="event-coming-badge">準備中</div>
           <div class="event-card__header pink">
-            <span class="event-icon">♡</span>
-            <span class="event-freq">開催予定</span>
-          </div>
-          <div class="event-card__body">
-            <h3>恋活ナイト</h3>
-            <p>20〜35歳限定の出会いパーティ。明るい雰囲気でゆっくり話せるのが人気の秘密。</p>
-            <div class="event-meta">
-              <span>参加費 ¥3,500~</span>
-              <span>男女各15名</span>
-            </div>
-            <span class="btn btn--pink event-btn-disabled">準備中</span>
-          </div>
-        </div>
-        <div class="event-card event-card--disabled">
-          <div class="event-coming-badge">準備中</div>
-          <div class="event-card__header amber">
             <span class="event-icon">🥂</span>
             <span class="event-freq">開催予定</span>
           </div>
           <div class="event-card__body">
-            <h3>大人の合コン会</h3>
-            <p>30代中心のオトナ合コン。少人数・入れ替え制でじっくりとお話できます。</p>
+            <h3>合コン</h3>
+            <p>少人数の出会いの場を企画中です。<br>開催情報はSNSにてお知らせします。</p>
             <div class="event-meta">
-              <span>参加費 ¥4,500~</span>
-              <span>男女各8名</span>
+              <span>詳細準備中</span>
             </div>
-            <span class="btn btn--amber event-btn-disabled">準備中</span>
+            <span class="btn btn--pink event-btn-disabled">準備中</span>
           </div>
         </div>
-        <div class="event-card event-card--disabled">
-          <div class="event-coming-badge">準備中</div>
-          <div class="event-card__header teal">
-            <span class="event-icon">🍸</span>
-            <span class="event-freq">開催予定</span>
+
+        <!-- イベント：予約可能 -->
+        <div class="event-card">
+          <div class="event-card__header amber">
+            <span class="event-icon">✨</span>
+            <span class="event-freq">開催中</span>
           </div>
           <div class="event-card__body">
-            <h3>趣味コン・テーマパーティ</h3>
-            <p>映画・旅行・音楽など共通の趣味を持つ人同士が自然と仲良くなれる企画。</p>
+            <h3>イベント</h3>
+            <p>Haze Barが主催する特別イベントを定期開催。音楽・アート・テーマナイトなど様々な企画をご用意しています。</p>
             <div class="event-meta">
-              <span>参加費 ¥2,500~</span>
-              <span>テーマ別開催</span>
+              <span>詳細はお問い合わせください</span>
             </div>
-            <span class="btn btn--teal event-btn-disabled">準備中</span>
+            <a href="#reserve" class="btn btn--amber">参加を申し込む</a>
+          </div>
+        </div>
+
+        <!-- 貸し切りパーティ：予約可能 -->
+        <div class="event-card">
+          <div class="event-card__header teal">
+            <span class="event-icon">🎉</span>
+            <span class="event-freq">随時受付</span>
+          </div>
+          <div class="event-card__body">
+            <h3>貸し切りパーティ</h3>
+            <p>誕生日・歓送迎会・記念日など、特別な日をHaze Barで。10名以上から貸切でご利用いただけます。</p>
+            <div class="event-meta">
+              <span>10名以上〜</span>
+              <span>要相談</span>
+            </div>
+            <a href="#reserve" class="btn btn--teal">予約・お問い合わせ</a>
           </div>
         </div>
       </div>
@@ -347,8 +348,8 @@
               <div class="hp-bar-purpose-group" id="hp-barPurposeGroup" style="display:none">
                 <label>ご利用目的（任意）</label>
                 <div class="hp-purpose-grid">
-                  <label class="hp-purpose-btn"><input type="radio" name="hp-barPurpose" value="goukon"><span>合コン</span></label>
-                  <label class="hp-purpose-btn hp-purpose-btn--disabled"><input type="radio" name="hp-barPurpose" value="event" disabled><span>イベント参加<br><small>準備中</small></span></label>
+                  <label class="hp-purpose-btn hp-purpose-btn--disabled"><input type="radio" name="hp-barPurpose" value="goukon" disabled><span>合コン<br><small>準備中</small></span></label>
+                  <label class="hp-purpose-btn"><input type="radio" name="hp-barPurpose" value="event"><span>イベント参加</span></label>
                   <label class="hp-purpose-btn" id="hp-partyPurposeBtn"><input type="radio" name="hp-barPurpose" value="party"><span>貸切パーティ</span></label>
                 </div>
                 <p class="hp-purpose-note">※ 未選択の場合は通常のバー利用となります</p>
