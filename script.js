@@ -118,8 +118,8 @@ if (hpPickDate) {
   });
 }
 
-// STEP 3：時間取得（JSONP）
-function hpLoadTimeSlots() {
+// STEP 3：時間取得（fetch方式）
+async function hpLoadTimeSlots() {
   document.getElementById('hp-timeLoading').style.display = 'block';
   document.getElementById('hp-timeError').style.display   = 'none';
   document.getElementById('hp-cafeTimes').style.display   = 'none';
@@ -127,28 +127,54 @@ function hpLoadTimeSlots() {
   document.getElementById('hp-cafeGrid').innerHTML = '';
   document.getElementById('hp-barGrid').innerHTML  = '';
 
+  // JSONP経由で取得（fetchはGASリダイレクトでCORSエラーになるため）
   const cbName = 'hpAvailCb_' + Date.now();
-  const timeout = setTimeout(() => {
-    delete window[cbName];
-    hpShowTimeError('タイムアウトしました。再度お試しください。');
-  }, 10000);
 
-  window[cbName] = (data) => {
-    clearTimeout(timeout);
-    delete window[cbName];
+  const p = new Promise((resolve, reject) => {
+    const timer = setTimeout(() => {
+      delete window[cbName];
+      reject(new Error('timeout'));
+    }, 15000);
+
+    window[cbName] = (data) => {
+      clearTimeout(timer);
+      delete window[cbName];
+      resolve(data);
+    };
+
+    const s   = document.createElement('script');
+    s.src     = HP_GAS_URL + '?action=availability&date=' + hpDate +
+                '&guests=' + hpGuests + '&seatType=' + hpSeatType +
+                '&callback=' + cbName + '&t=' + Date.now();
+    s.onerror = () => { clearTimeout(timer); delete window[cbName]; reject(new Error('load')); };
+    document.head.appendChild(s);
+  });
+
+  try {
+    const data = await p;
     document.getElementById('hp-timeLoading').style.display = 'none';
     if (data.status !== 'ok' || !data.slots || !data.slots.length) {
       hpShowTimeError('この日の予約枠が見つかりません。別の日をお選びください。');
       return;
     }
     hpRenderTimeSlots(data.slots);
-  };
-
-  const s = document.createElement('script');
-  s.src = HP_GAS_URL + '?action=availability&date=' + hpDate +
-          '&guests=' + hpGuests + '&seatType=' + hpSeatType + '&callback=' + cbName;
-  s.onerror = () => { clearTimeout(timeout); hpShowTimeError('空き確認に失敗しました。'); };
-  document.head.appendChild(s);
+  } catch (err) {
+    document.getElementById('hp-timeLoading').style.display = 'none';
+    // フォールバック：直接fetchで再試行
+    try {
+      const url  = HP_GAS_URL + '?action=availability&date=' + hpDate +
+                   '&guests=' + hpGuests + '&seatType=' + hpSeatType;
+      const res  = await fetch(url, { redirect: 'follow' });
+      const data = await res.json();
+      if (data.status !== 'ok' || !data.slots || !data.slots.length) {
+        hpShowTimeError('この日の予約枠が見つかりません。別の日をお選びください。');
+        return;
+      }
+      hpRenderTimeSlots(data.slots);
+    } catch (e) {
+      hpShowTimeError('空き確認に失敗しました。再度お試しください。');
+    }
+  }
 }
 
 function hpShowTimeError(msg) {
