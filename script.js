@@ -115,6 +115,80 @@ function closeMobileNav() {
     .catch(() => startSlideshow()); // APIエラー時もフォールバック
 })();
 
+// ===== イベント参加申込フォーム =====
+const hpEventForm = document.getElementById('hp-eventForm');
+if (hpEventForm) {
+  hpEventForm.addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const form = e.target;
+    const btn  = form.querySelector('.hp-submit-btn');
+    const msg  = document.getElementById('hp-eventMsg');
+
+    const name  = form.querySelector('[name="name"]').value.trim();
+    const phone = form.querySelector('[name="phone"]').value.trim();
+    const email = form.querySelector('[name="email"]').value.trim();
+    if (!name || !phone || !email) {
+      showMsg(msg, '必須項目をすべて入力してください。', 'error');
+      return;
+    }
+
+    btn.textContent = '送信中...';
+    btn.disabled    = true;
+
+    const data = {
+      purpose:    'event',
+      event_name: document.getElementById('hp-eventName').value,
+      name, phone, email,
+      guests:  form.querySelector('[name="guests"]').value,
+      message: form.querySelector('[name="message"]').value.trim(),
+      date:    form.querySelector('[name="event_name"]').value,
+    };
+
+    try {
+      await hpSubmitToGAS(data);
+      form.reset();
+      showMsg(msg, '✅ 申込を受け付けました！詳細をメールでお送りします。', 'success');
+    } catch {
+      showMsg(msg, '送信に失敗しました。お電話（0877-35-9499）にてご連絡ください。', 'error');
+    } finally {
+      btn.textContent = '参加を申し込む';
+      btn.disabled    = false;
+    }
+  });
+
+  function showMsg(el, text, type) {
+    el.style.display = 'block';
+    el.className     = 'hp-form-message ' + type;
+    el.textContent   = text;
+  }
+
+  function hpSubmitToGAS(data) {
+    return new Promise(resolve => {
+      const frameName = 'hp_gas_' + Date.now();
+      const iframe = document.createElement('iframe');
+      iframe.name  = frameName;
+      iframe.style.display = 'none';
+      document.body.appendChild(iframe);
+      const form = document.createElement('form');
+      form.method = 'GET';
+      form.action = HP_GAS_URL;
+      form.target = frameName;
+      Object.entries(data).forEach(([k,v]) => {
+        const i = document.createElement('input');
+        i.type = 'hidden'; i.name = k; i.value = v;
+        form.appendChild(i);
+      });
+      document.body.appendChild(form);
+      form.submit();
+      setTimeout(() => {
+        document.body.removeChild(form);
+        document.body.removeChild(iframe);
+        resolve();
+      }, 2000);
+    });
+  }
+}
+
 // ===== Fade-up on scroll =====
 const fadeEls = document.querySelectorAll(
   '.menu-card, .private-card, .event-card, .concept__text, .concept__image, .gallery-item, .info-card'

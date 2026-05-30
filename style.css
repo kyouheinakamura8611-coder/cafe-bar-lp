@@ -936,6 +936,142 @@ ul { list-style: none; }
   border-color: #aaa !important;
 }
 
+/* ===== ホットペッパー誘導バナー ===== */
+.hotpepper-notice {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(201,169,110,0.2);
+  border-radius: 12px;
+  padding: 20px 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 48px;
+  flex-wrap: wrap;
+}
+.hotpepper-notice__text {
+  font-size: 0.88rem;
+  color: rgba(255,255,255,0.6);
+  letter-spacing: 0.04em;
+}
+.hotpepper-notice__link {
+  color: var(--gold-light);
+  text-decoration: underline;
+}
+.hotpepper-notice__btn {
+  padding: 10px 22px;
+  border: 1.5px solid rgba(201,169,110,0.45);
+  border-radius: 50px;
+  color: var(--gold-light);
+  font-size: 0.8rem;
+  letter-spacing: 0.08em;
+  white-space: nowrap;
+  transition: all 0.3s;
+}
+.hotpepper-notice__btn:hover {
+  background: var(--gold);
+  border-color: var(--gold);
+  color: #fff;
+}
+
+/* ===== イベント予約セクション ===== */
+.event-reserve-inner {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 48px;
+  align-items: start;
+}
+
+/* 準備中メッセージ */
+.event-status-closed {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 60px 40px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(201,169,110,0.15);
+  border-radius: 16px;
+  gap: 16px;
+}
+/* event-open クラスがある場合は準備中を非表示 */
+.event-open .event-status-closed { display: none; }
+
+.event-status-icon { font-size: 3rem; }
+.event-status-title {
+  font-family: var(--font-serif);
+  font-size: 1.5rem;
+  font-weight: 400;
+  color: #fff;
+  letter-spacing: 0.08em;
+}
+.event-status-desc {
+  font-size: 0.9rem;
+  color: rgba(255,255,255,0.55);
+  line-height: 2;
+}
+.event-ig-link {
+  font-size: 0.8rem;
+  color: var(--gold-light);
+  letter-spacing: 0.08em;
+  text-decoration: underline;
+  transition: color 0.3s;
+}
+.event-ig-link:hover { color: var(--gold); }
+
+/* 受付中フォーム */
+.event-form-wrap {
+  display: none; /* 通常は非表示 */
+}
+/* event-open クラスがある場合に表示 */
+.event-open .event-form-wrap { display: block; }
+
+.current-event-banner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 18px;
+  background: rgba(201,169,110,0.12);
+  border: 1px solid rgba(201,169,110,0.35);
+  border-radius: 10px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+.current-event-badge {
+  background: var(--gold);
+  color: #fff;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  padding: 3px 10px;
+  border-radius: 50px;
+  flex-shrink: 0;
+}
+.current-event-name {
+  font-family: var(--font-serif);
+  font-size: 0.95rem;
+  color: var(--gold-light);
+  letter-spacing: 0.06em;
+}
+
+.event-form .hp-form-group select {
+  width: 100%;
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(201,169,110,0.25);
+  border-radius: 8px;
+  padding: 12px 14px;
+  font-family: var(--font-sans);
+  font-size: 0.9rem;
+  color: #fff;
+  outline: none;
+}
+.event-form .hp-form-group select option { background: #2c2520; }
+
+@media (max-width: 768px) {
+  .event-reserve-inner { grid-template-columns: 1fr; }
+  .hotpepper-notice { flex-direction: column; text-align: center; }
+}
+
 /* ===== 半透明予約ボタン ===== */
 .btn--glass {
   background: rgba(201,169,110,0.18);
