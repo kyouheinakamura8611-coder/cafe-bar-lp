@@ -50,6 +50,31 @@ function doGet(e) {
 function doPost(e) { return doGet(e); }
 
 // ================================================================
+// イベント定員チェック（purpose=eventの場合）
+// MAX_EVENT_CAPACITY を変更するだけで定員を調整できます
+// ================================================================
+const MAX_EVENT_CAPACITY = 25; // ← イベント定員
+
+function getEventCapacity() {
+  const ss    = SpreadsheetApp.getActiveSpreadsheet();
+  const sheet = ss.getSheetByName('予約リスト');
+  if (!sheet || sheet.getLastRow() <= 1) return { total: 0, remaining: MAX_EVENT_CAPACITY };
+
+  const data = sheet.getDataRange().getValues();
+  let total  = 0;
+
+  for (let i = 1; i < data.length; i++) {
+    const purpose = String(data[i][8]);
+    const status  = String(data[i][10] || '');
+    if (purpose === 'イベント' && status !== 'キャンセル') {
+      total += parseInt(String(data[i][6])) || 1;
+    }
+  }
+
+  return { total, remaining: Math.max(0, MAX_EVENT_CAPACITY - total) };
+}
+
+// ================================================================
 // 空き確認
 // ================================================================
 function getAvailability(date, guests, seatType) {
@@ -171,6 +196,20 @@ function processReservation(params) {
         }
       }
     }
+  }
+
+  // ▼ イベント予約の場合は定員チェック（席管理は使わない）
+  if (params.purpose === 'event') {
+    const requestedGuests = parseInt(params.guests) || 1;
+    const cap = getEventCapacity();
+    if (cap.remaining < requestedGuests) {
+      return { status: 'full', message: '定員（25名）に達しました。当日のご来店もお待ちしています！' };
+    }
+    params.tableAssigned = '自由席';
+    saveToSheet(params);
+    sendConfirmationToCustomer(params);
+    sendNotificationToStore(params);
+    return { status: 'success', remaining: cap.remaining - requestedGuests };
   }
 
   params.tableAssigned = tableAssigned;

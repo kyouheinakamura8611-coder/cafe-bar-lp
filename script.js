@@ -124,9 +124,10 @@ if (hpEventForm) {
     const btn  = form.querySelector('.hp-submit-btn');
     const msg  = document.getElementById('hp-eventMsg');
 
-    const name  = form.querySelector('[name="name"]').value.trim();
-    const phone = form.querySelector('[name="phone"]').value.trim();
-    const email = form.querySelector('[name="email"]').value.trim();
+    const name   = form.querySelector('[name="name"]').value.trim();
+    const phone  = form.querySelector('[name="phone"]').value.trim();
+    const email  = form.querySelector('[name="email"]').value.trim();
+    const guests = form.querySelector('[name="guests"]').value;
     if (!name || !phone || !email) {
       showMsg(msg, '必須項目をすべて入力してください。', 'error');
       return;
@@ -138,18 +139,24 @@ if (hpEventForm) {
     const data = {
       purpose:    'event',
       event_name: document.getElementById('hp-eventName').value,
-      name, phone, email,
-      guests:  form.querySelector('[name="guests"]').value,
+      name, phone, email, guests,
       message: form.querySelector('[name="message"]').value.trim(),
-      date:    form.querySelector('[name="event_name"]').value,
     };
 
     try {
+      // JSONP経由で送信（定員チェック結果を受け取れる）
+      const result = await hpEventSubmitJSONP(data);
+      if (result.status === 'full') {
+        showMsg(msg, '😢 定員（25名）に達しました。当日のご来店もお待ちしています！', 'error');
+      } else {
+        form.reset();
+        showMsg(msg, '✅ 申込を受け付けました！詳細をメールでお送りします。', 'success');
+      }
+    } catch {
+      // JSONP失敗時はiframeフォールバック（Edge等でのブロック対策）
       await hpSubmitToGAS(data);
       form.reset();
       showMsg(msg, '✅ 申込を受け付けました！詳細をメールでお送りします。', 'success');
-    } catch {
-      showMsg(msg, '送信に失敗しました。お電話（0877-35-9499）にてご連絡ください。', 'error');
     } finally {
       btn.textContent = '参加を申し込む';
       btn.disabled    = false;
@@ -160,6 +167,22 @@ if (hpEventForm) {
     el.style.display = 'block';
     el.className     = 'hp-form-message ' + type;
     el.textContent   = text;
+  }
+
+  // JSONP送信（レスポンスあり）
+  function hpEventSubmitJSONP(data) {
+    return new Promise((resolve, reject) => {
+      const cbName = 'hpEvtCb_' + Date.now();
+      const timer  = setTimeout(() => { delete window[cbName]; reject(new Error('timeout')); }, 12000);
+      window[cbName] = (res) => { clearTimeout(timer); delete window[cbName]; resolve(res); };
+      const url = new URL(HP_GAS_URL);
+      Object.entries(data).forEach(([k,v]) => url.searchParams.append(k, v));
+      url.searchParams.append('callback', cbName);
+      const s = document.createElement('script');
+      s.src = url.toString();
+      s.onerror = () => { clearTimeout(timer); delete window[cbName]; reject(new Error('load')); };
+      document.head.appendChild(s);
+    });
   }
 
   function hpSubmitToGAS(data) {
