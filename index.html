@@ -359,6 +359,19 @@
           <form id="hp-eventForm" class="event-form" novalidate>
             <input type="hidden" name="purpose"    value="event">
             <input type="hidden" name="event_name" id="hp-eventName" value="🌈 平成ネオンナイト💖">
+            <input type="hidden" name="date"       value="2026-06-13">
+            <input type="hidden" name="message"    value="平成ネオンナイト 6/13">
+
+            <div class="hp-form-group">
+              <label>参加人数 <span style="color:var(--gold)">*</span></label>
+              <select name="guests" required>
+                <option value="1名">1名</option>
+                <option value="2名">2名</option>
+                <option value="3名">3名</option>
+                <option value="4名">4名</option>
+                <option value="5名以上">5名以上（要相談）</option>
+              </select>
+            </div>
             <div class="hp-form-row">
               <div class="hp-form-group">
                 <label>お名前 <span style="color:var(--gold)">*</span></label>
@@ -372,18 +385,6 @@
             <div class="hp-form-group">
               <label>メールアドレス <span style="color:var(--gold)">*</span></label>
               <input type="email" name="email" placeholder="example@email.com" required>
-            </div>
-            <div class="hp-form-group">
-              <label>参加人数</label>
-              <select name="guests">
-                <option value="1名">1名</option><option value="2名">2名</option>
-                <option value="3名">3名</option><option value="4名">4名</option>
-                <option value="5名以上">5名以上（要相談）</option>
-              </select>
-            </div>
-            <div class="hp-form-group">
-              <label>ご要望・ご質問</label>
-              <textarea name="message" rows="3" placeholder="アレルギー、その他ご質問などお気軽に。"></textarea>
             </div>
             <div id="hp-eventMsg" class="hp-form-message" style="display:none"></div>
             <button type="submit" class="hp-submit-btn">参加を申し込む</button>
