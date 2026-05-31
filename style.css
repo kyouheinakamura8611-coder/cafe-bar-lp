@@ -1498,6 +1498,67 @@ ul { list-style: none; }
   transform: translateY(0);
 }
 
+/* ===== TYPOGRAPHY IMPROVEMENTS ===== */
+
+/* 全体の行間を改善 */
+body { line-height: 1.85; }
+
+/* セクション説明文 */
+.section-desc {
+  font-size: 1rem !important;
+  line-height: 2.1;
+}
+
+/* コンセプト本文 */
+.concept__body {
+  font-size: 1rem;
+  line-height: 2.1;
+}
+
+/* メニューカード */
+.menu-card h3 { font-size: 1.15rem; line-height: 1.5; }
+.menu-card p  { font-size: 0.9rem;  line-height: 1.85; }
+
+/* イベントカード */
+.event-card h3 { font-size: 1.1rem; }
+.event-card p  { font-size: 0.9rem; line-height: 1.85; }
+.event-meta    { font-size: 0.82rem; }
+
+/* アクセスセクション */
+.access-dl dd { font-size: 0.95rem; line-height: 1.9; }
+
+/* NEXT EVENT セクション */
+.next-event__title {
+  font-size: clamp(1.8rem, 3.5vw, 3rem);
+  line-height: 1.35;
+  word-break: keep-all;
+}
+.next-event__date {
+  font-size: clamp(1rem, 2vw, 1.2rem);
+  letter-spacing: 0.08em;
+}
+.next-event__tags {
+  font-size: 0.9rem;
+  text-transform: none;      /* 日本語・絵文字に uppercase 不要 */
+  letter-spacing: 0.06em;
+  color: rgba(255,255,255,0.72);
+  line-height: 1.85;
+}
+.next-event__desc {
+  font-size: 0.97rem;
+  line-height: 2.1;
+  color: rgba(255,255,255,0.78);
+}
+
+/* ヒーローキャッチコピー */
+.hero__catch {
+  font-size: clamp(0.95rem, 2vw, 1.15rem);
+  letter-spacing: 0.08em;
+}
+
+/* フッターナビ */
+.footer__nav a { font-size: 0.82rem; }
+
 /* ===== RESPONSIVE ===== */
 @media (max-width: 1024px) {
   .menu-grid,
@@ -1510,6 +1571,8 @@ ul { list-style: none; }
 }
 
 @media (max-width: 768px) {
+  html { font-size: 15px; }
+
   .header__nav { display: none; }
   .hamburger { display: flex; }
 
@@ -1521,7 +1584,7 @@ ul { list-style: none; }
   .concept__image { order: -1; }
 
   .reserve-inner { grid-template-columns: 1fr; }
-  .access-inner { grid-template-columns: 1fr; }
+  .access-inner  { grid-template-columns: 1fr; }
 
   .gallery-grid {
     grid-template-columns: repeat(2, 1fr);
@@ -1533,15 +1596,54 @@ ul { list-style: none; }
   .hero__cta { flex-direction: column; align-items: center; }
   .form-row.two-col { grid-template-columns: 1fr; }
 
-  section { padding: 64px 0; }
+  section { padding: 60px 0; }
   .cafe-section, .bar-section, .private-section, .events-section,
-  .gallery-section, .reserve-section, .access-section, .concept { padding: 64px 0; }
+  .gallery-section, .reserve-section, .access-section, .concept,
+  .next-event-section { padding: 60px 0; }
+
+  /* NEXT EVENT スマホ */
+  .next-event__inner {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+  .next-event__image-wrap { aspect-ratio: 4/3; }
+  .next-event__title  { font-size: clamp(1.5rem, 6vw, 2.2rem); }
+  .next-event__date   { font-size: 1rem; }
+  .next-event__tags   { font-size: 0.88rem; }
+  .next-event__desc   { font-size: 0.93rem; }
+  .next-event__content { gap: 16px; }
+
+  /* イベントカード スマホ */
+  .event-card__body { padding: 16px 20px 20px; }
+
+  /* コンセプト スマホ */
+  .concept__body { font-size: 0.93rem; }
+
+  /* セクション文字 */
+  .section-desc { font-size: 0.93rem !important; padding: 0 4px; }
+  .section-title { margin-bottom: 16px; }
+
+  /* ホットペッパーバナー */
+  .hotpepper-notice { padding: 14px 18px; flex-direction: column; text-align: center; gap: 12px; }
 }
 
 @media (max-width: 480px) {
+  html { font-size: 14px; }
+
+  .container { padding: 0 18px; }
+
   .gallery-grid {
     grid-template-columns: 1fr;
     grid-auto-rows: 200px;
   }
   .g-wide { grid-column: span 1; }
+
+  /* ヒーロー スマホ小 */
+  .hero__hours { flex-direction: column; gap: 4px; font-size: 0.7rem; }
+  .separator   { display: none; }
+  .hero__cta .btn { width: 100%; text-align: center; padding: 13px 20px; }
+
+  /* NEXT EVENT 超小画面 */
+  .next-event__title { font-size: 1.5rem; }
+  .next-event__ig-btn { font-size: 0.8rem; padding: 11px 20px; width: 100%; justify-content: center; }
 }
