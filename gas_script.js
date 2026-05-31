@@ -67,15 +67,17 @@ function getAvailability(date, guests, seatType) {
     if (formatDate(data[i][0]) !== date) continue;
 
     const time  = formatTime(data[i][1]);
-    const cnt2  = parseInt(data[i][2]) || 0;
-    const cnt4  = parseInt(data[i][3]) || 0;
-    const cntC  = parseInt(data[i][4]) || 0;
+    const cnt2  = parseInt(data[i][2]) || 0; // 2名テーブル
+    const cnt4  = parseInt(data[i][3]) || 0; // 4名テーブル
+    const cntW  = parseInt(data[i][4]) || 0; // 窓側カウンター
+    const cntB  = parseInt(data[i][5]) || 0; // バーカウンター
 
     let available = false;
 
-    if (seatType === 'counter') {
-      // カウンター：guests人分の空きがあるか
-      available = cntC >= guests;
+    if (seatType === 'window_counter') {
+      available = cntW >= guests;
+    } else if (seatType === 'bar_counter') {
+      available = cntB >= guests;
     } else {
       // テーブル席
       if (guests <= 2) {
@@ -112,14 +114,17 @@ function processReservation(params) {
 
         const cnt2 = parseInt(data[i][2]) || 0;
         const cnt4 = parseInt(data[i][3]) || 0;
-        const cntC = parseInt(data[i][4]) || 0;
+        const cntW = parseInt(data[i][4]) || 0; // 窓側カウンター
+        const cntB = parseInt(data[i][5]) || 0; // バーカウンター
 
         const seatType = params.seat_type || 'table';
 
-        // テーブル割り当て判定（最初のスロットで確認）
-        if (seatType === 'counter') {
-          if (cntC >= guests) { tableAssigned = 'カウンター'; }
-          else return { status: 'full', message: 'カウンターの空き席が不足しています。' };
+        if (seatType === 'window_counter') {
+          if (cntW >= guests) { tableAssigned = '窓側カウンター'; }
+          else return { status: 'full', message: '窓側カウンターの空き席が不足しています。' };
+        } else if (seatType === 'bar_counter') {
+          if (cntB >= guests) { tableAssigned = 'バーカウンター'; }
+          else return { status: 'full', message: 'バーカウンターの空き席が不足しています。' };
         } else if (guests <= 2) {
           if      (cnt2 > 0) tableAssigned = '2名テーブル';
           else if (cnt4 > 0) tableAssigned = '4名テーブル';
@@ -152,14 +157,17 @@ function processReservation(params) {
 
         const c2 = parseInt(allData[i][2]) || 0;
         const c4 = parseInt(allData[i][3]) || 0;
-        const cC = parseInt(allData[i][4]) || 0;
+        const cW = parseInt(allData[i][4]) || 0;
+        const cB = parseInt(allData[i][5]) || 0;
 
         if (tableAssigned === '2名テーブル' && c2 > 0) {
           sheet2.getRange(i+1, 3).setValue(c2 - 1);
         } else if (tableAssigned === '4名テーブル' && c4 > 0) {
           sheet2.getRange(i+1, 4).setValue(c4 - 1);
-        } else if (tableAssigned === 'カウンター' && cC >= guests) {
-          sheet2.getRange(i+1, 5).setValue(cC - guests);
+        } else if (tableAssigned === '窓側カウンター' && cW >= guests) {
+          sheet2.getRange(i+1, 5).setValue(cW - guests);
+        } else if (tableAssigned === 'バーカウンター' && cB >= guests) {
+          sheet2.getRange(i+1, 6).setValue(cB - guests);
         }
       }
     }
@@ -194,7 +202,7 @@ function saveToSheet(data) {
   }
 
   const purposeMap = {
-    cafe:'カフェ', bar:'バー', goukon:'合コン/個室',
+    cafe:'カフェ', bar:'バー', goukon:'恋活',
     event:'イベント', party:'貸切', other:'その他'
   };
 
@@ -344,14 +352,10 @@ function restoreSeat(date, time, tableType, guests) {
   const sheet = ss.getSheetByName('席管理');
   if (!sheet) return;
 
-  const MAX = { '2名テーブル': 2, '4名テーブル': 3, 'カウンター': 4 };
+  const MAX = { '2名テーブル': 2, '4名テーブル': 5, '窓側カウンター': 6, 'バーカウンター': 4 };
 
-  // 2時間分（4スロット×30分）を復元
   const restoreTimes = [
-    time,
-    addMinutes(time, 30),
-    addMinutes(time, 60),
-    addMinutes(time, 90)
+    time, addMinutes(time, 30), addMinutes(time, 60), addMinutes(time, 90)
   ];
 
   const data = sheet.getDataRange().getValues();
@@ -366,9 +370,12 @@ function restoreSeat(date, time, tableType, guests) {
     } else if (tableType === '4名テーブル') {
       const cur = parseInt(data[i][3]) || 0;
       sheet.getRange(i+1, 4).setValue(Math.min(cur + 1, MAX['4名テーブル']));
-    } else if (tableType === 'カウンター') {
+    } else if (tableType === '窓側カウンター') {
       const cur = parseInt(data[i][4]) || 0;
-      sheet.getRange(i+1, 5).setValue(Math.min(cur + (guests || 1), MAX['カウンター']));
+      sheet.getRange(i+1, 5).setValue(Math.min(cur + (guests || 1), MAX['窓側カウンター']));
+    } else if (tableType === 'バーカウンター') {
+      const cur = parseInt(data[i][5]) || 0;
+      sheet.getRange(i+1, 6).setValue(Math.min(cur + (guests || 1), MAX['バーカウンター']));
     }
   }
 }
@@ -389,7 +396,8 @@ function setupSeatManagement() {
                  '13:00','13:30','14:00','14:30','15:00','15:30',
                  '21:00','21:30','22:00','22:30','23:00','23:30']; // 23:30 L.O.
 
-  const rows = [['日付','時間','2名残数','4名残数','カウンター残席','備考']];
+  // 列：日付 | 時間 | 2名テーブル(max2) | 4名テーブル(max5) | 窓側カウンター(max6) | バーカウンター(max4)
+  const rows = [['日付','時間','2名テーブル残数(最大2)','4名テーブル残数(最大5)','窓側カウンター残席(最大6)','バーカウンター残席(最大4)']];
   const today = new Date();
 
   for (let d = 0; d < 30; d++) {
@@ -399,7 +407,7 @@ function setupSeatManagement() {
     const ds = dt.getFullYear() + '-' +
                String(dt.getMonth()+1).padStart(2,'0') + '-' +
                String(dt.getDate()).padStart(2,'0');
-    SLOTS.forEach(t => rows.push([ds, t, 2, 3, 4, '']));
+    SLOTS.forEach(t => rows.push([ds, t, 2, 5, 6, 4]));
   }
 
   sheet.getRange(1, 1, rows.length, 6).setValues(rows);

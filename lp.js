@@ -5,7 +5,7 @@ const GAS_URL = 'https://script.google.com/macros/s/AKfycbwabqeV2enmmmriEdwml3i1
 let selectedGuests   = 0;
 let selectedDate     = '';
 let selectedTime     = '';
-let selectedSeatType = 'table'; // 'table' or 'counter'
+let selectedSeatType = 'table'; // 'table' / 'window_counter' / 'bar_counter'
 
 // ===== ステップ管理 =====
 function goStep(n) {
@@ -178,7 +178,9 @@ function isBarTime(time) {
 
 // ===== STEP 4：サマリー更新 =====
 function updateSummary() {
-  const seatLabel = selectedSeatType === 'counter' ? 'カウンター' : 'テーブル席';
+  const seatLabel = selectedSeatType === 'window_counter' ? '窓側カウンター'
+                  : selectedSeatType === 'bar_counter'    ? 'バーカウンター'
+                  : 'テーブル席';
   document.getElementById('summaryGuests').textContent = selectedGuests + '名・' + seatLabel;
   document.getElementById('summaryDate').textContent   = selectedDate.replace(/-/g, '/');
   document.getElementById('summaryTime').textContent   = selectedTime + '〜';
